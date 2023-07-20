@@ -1,0 +1,163 @@
+\documentclass[titlepage,draft]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+\usepackage{mathpartir}
+
+\title{
+    Stage :\\[1em]
+    % Application spontanée de transformations pour raisonnement automatique en théorie des types dépendants
+    Application spontanée de transformations logiques en assistance au raisonnement automatique
+}
+\date{Du 5 juin au 28 juillet 2023}
+\author{
+    Alexis~CARRÉ \thanks{École Normale Supérieure de Lyon}
+    \vspace{1em}
+    \and
+    Réalisé au Laboratoire Méthodes Formelles sous la direction de :\\[1em]
+    Chantal~KELLER \thanks{Laboratoire Méthodes Formelles, Université Paris Saclay}
+    \hspace{1em}
+    Louise~DUBOIS~DE~PRISQUE\footnotemark[2]
+    \vspace{2em}
+}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+\subsection{Assistant de preuve et preuves formelles}
+Les assistants de preuve sont des logiciels permettant de construire une preuve formelle, parmi les plus connus nous pouvons citer Coq, Isabelle, Agda, Lean, ... Leur fonctionnement est basé sur l'interaction entre un humain et une machine. L'humain guide la recherche de preuve, en détaillant les étapes de la preuve et la machine sauvegarde ces étapes puis s'assure de leur validité.
+
+Une preuve formelle est une démonstration construite à l'aide de règles de déduction. Ces règles sont aux briques de base de transformations appelées tactiques dans Coq. La proposition à démontrer, aussi appelé but, est modifiée ou décomposée en sous but à l'aide de ces tactiques. Lorsque tous les sous buts sont des propositions sont des axiomes ou des propositions déjà démontrées, la preuve est terminée. Les axiomes sont des propositions qui sont considérées comme vraies sans avoir besoin d'être démontrées. Les propositions supposées ou déjà démontrées sont appelées hypothèses. Une preuve formelle est donc une séquence d'étapes, chacune étant une proposition vraie, qui permet de démontrer le but.
+
+\subsection{Un peu d'automatisation}
+La construction d'une preuve formelle est un travail fastidieux et chronophage. En effet, des propositions paraissant évidentes peuvent nécessiter de nombreuses étapes. Il est donc nécessaire de trouver des moyens d'automatiser certaines étapes de la preuve. De nombreux travaux ont déjà étés réalisés avec pour objectif d'intégrer des solveurs SMT dans des assistants de preuve.
+
+% TODO : Correction : ils sont pas juste limités à logique du premier ordre sans quantificateur
+% TODO : Deux modules :
+% TODO : - module logique propositionnelle : pas de quantificateur
+% TODO : - module théorie : Ajoute axiomes et quelques constantes et quelques fonctions, cherches des instances pour les quantificateurs
+% TODO : SAT trouve valuation/modèle, si formule compatible avec quantif alors OK, si ne marche pas au niveau quantif on relance SAT avec d'autres valuation
+Ces solveurs SMT (Satisfiability modulo theories) sont des logiciels permettant de résoudre des problèmes de décision. Cependant, ils sont limités à des formules de la logique du premier ordre et sont combinés à des théories pour permettre de résoudre des formules plus complexes. Les théories les plus utilisées sont la théorie de l'égalité, la théorie de l'arithmétique linéaire sur les entiers et la théorie de l'arithmétique linéaire sur les réels.
+
+L'assistant de preuve Coq repose sur le calcul des constructions inductives qui est une logique plus expressive que la logique du premier ordre. Il est donc nécessaire de pouvoir détecter les formules qui ne sont pas dans la logique du premier ordre et essayer de les traiter différemment.
+
+% TODO : Peut être plus détailler section suivante
+% TODO : Exemples ?
+\subsection{Contexte et objectifs de ce stage}
+Les travaux de Louise et Chantal, en collaboration avec Valentin BLOT, s'intéressent déjà à ce sujet. Ils ont déjà implémenté plusieurs tactiques permettant de transformer des formules du calcul des constructions inductives en formules de la logique du 1\textsuperscript{er} ordre. Toutefois l'application de ces tactiques n'est pas toujours possible. Il est donc nécessaire de pouvoir détecter les formules sur lesquelles ces tactiques peuvent être appliquées.
+
+Également, l'ordre de ces tactiques n'est pas anodin. En effet, certaines tactiques vont augmenter le nombre de tactiques qu'il est possible d'appliquer ce qui complexifie la recherche de preuve. Il est donc important de prendre en compte l'ordre dans lequel les appliquer.
+
+L'objectif de ce stage est de trouver un moyen de détecter les formules sur lesquelles les tactiques peuvent être appliquées ainsi que de trouver un ordre d'application de ces tactiques.
+Ma contribution consiste en un langage de spécification permettant de décrire les conditions d'application d'une tactique. Les descriptions dans ce langage sont ensuite assignées à une priorité et une tactique, puis interprétées. La tactique associée à la description la plus prioritaire est appliquée si les conditions sont vérifiées.
+
+\section{Prototypage} \label{Prototypage}
+Pour des raisons de complexité, nous avons commencé par réaliser un prototype avant de démarrer l'implémentation dans Coq. Ce prototype nous a permis de tester nos différentes idées, de nous rendre compte des difficultés qui peuvent être rencontrées, valider certains choix techniques et d'implémentation, ainsi que de nous familiariser avec les outils de développement. Pour cela nous avons utilisé un assistant de preuve, réalisé par Louise, implémentant la déduction naturelle intuitionniste propositionnelle. Ce projet est programmé en OCaml ce qui est un atout pour nous, car c'est le langage qui est utilisé pour implémenter Coq.
+
+\subsection{De nouvelles tactiques}
+\subsubsection{Spécifications techniques :} \label{SpecsTactiques}
+Afin de mieux comprendre le fonctionnement des tactiques, nous avons commencé par en implémenter de nouvelles. L'ajout de tactiques ne change pas la logique sous-jacente, mais permet de simplifier la construction de preuve. Par exemple, pour l'élimination du connecteur $\land$ il existe une règle générique :
+% ! Peut être introduire ce que c'est les règles d'inférences ?
+\begin{mathpar}
+    \inferrule* [Right=($\land E$)] {
+        \Gamma \vdash A \land B
+        \\
+        \Gamma, A, B \vdash C
+    }{
+        \Gamma \vdash C
+    }
+\end{mathpar}
+Mais il est également possible d'établir des versions plus spécifiques de cette règle. Par exemple, nous pouvons définir les règles suivantes :
+\begin{mathpar}
+    \inferrule* [Right=($\land E_L$)] {
+        \Gamma \vdash A \land B
+    }{
+        \Gamma \vdash A
+    }
+    \and
+    \inferrule* [Right=($\land E_R$)] {
+        \Gamma \vdash A \land B
+    }{
+        \Gamma \vdash B
+    }
+\end{mathpar}
+Ces règles sont dérivables de la règle $\land E$ en la combinant avec d'autres règles. Cependant, elles permettent de simplifier la construction de preuve. En effet, si nous avons une formule de la forme $A \land B$ et que nous voulons prouver $A$, nous pouvons utiliser la règle $\land E_L$ qui génère moins de sous-buts et donc une preuve plus courte que la règle $\land E$.
+% * Peut être un message (ou annexe) sur la correction de ces tactiques ? Tactiques dérivables ?
+
+\subsubsection{Implémentation :}
+Afin de pouvoir commencer l'implémentation, il est nécessaire de comprendre comment les tactiques ont été conçues par Louise, ainsi que leur fonctionnement. Dans notre cas, l'assistant de preuve se décompose en deux parties. La première s'occupe de l'interaction avec l'utilisateur. Elle permet de lire les tactiques entrées par l'utilisateur, de les appliquer à la formule courante et d'afficher le résultat. L'application de ses tactiques à la formule courante produit un arbre de preuve contenant les tactiques appliquées, ainsi que les sous-buts générés restant à prouver et modélisés par des trous. La seconde partie s'assure de la validité de l'arbre de preuve nouvellement construit. Cette partie est cruciale, car une erreur logique dans celle-ci permettrait de prouver n'importe quelle formule.
+
+C'est ici que nous avons commis une erreur lors de l'implémentation des nouvelles tactiques. En ajoutant du code dans le noyau pour, il est possible que nous ayons introduit des comportements inattendus. Plutôt que d'essayer de nous assurer que nos changements n'avaient pas d'impacts indésirés, nous avons fait le choix de revenir en arrière et d'essayer de composer avec les tactiques existantes. Cela nous a permis de commencer à réfléchir à la manière de composer les tactiques. Cette erreur à permis de mettre en lumière le fait que les tactiques et le noyau sont deux entités distinctes et qu'il est important de les séparer. Cette séparation permet minimiser la quantité de code du noyau et donc de réduire la confiance que nous devons lui accorder.
+
+% TODO : Ajouter l'exemple avec exact_no_check en Coq
+Par ailleurs, cette distinction entre le noyau et les tactiques soulève une autre problématique : En aucun cas les tactiques vont garantir que leurs conditions d'applications sont respectées. Par exemple, si notre but est une conjonction, il serait utile d'interdire d'utiliser la règle d'introduction de la disjonction. Certes la vérification a posteriori par le noyau va rencontrer une erreur, cependant rien n'empêche l'utilisateur de l'utiliser. Pour pallier ce problème, nous avons ajouté aux tactiques une vérification. Celle-ci permet de s'assurer que les conditions d'applications sont respectées. Si ce n'est pas le cas, la tactique ne s'applique pas et un message d'erreur est affiché. Cette vérification n'est pas réalisée par le noyau, mais est déclenchée par la tactique. Cela permet de garder la séparation entre les deux entités et de ne pas ajouter de code dans le noyau. C'est également une première étape vers la détection et le déclenchement automatique de tactiques.
+
+
+\subsection{Composition de tactiques}
+En nous référant à la partie \ref{SpecsTactiques}, dans laquelle nous présentons de nouvelles règles concernant l'élimination du connecteur $\land$, nous pouvons remarquer que ces règles sont dérivables de la règle $\land E$. Cela signifie que nous pouvons les obtenir en combinant la règle $\land E$ avec d'autres règles. Voici les arbres de preuve correspondant à ces dérivations :
+\begin{mathpar}
+    \inferrule* [Right=($\land E$)] {
+        \Gamma \vdash A \land B
+        \\
+        \inferrule* [Right=($Axiom$)] {
+        }{
+            \Gamma, A, B \vdash A
+        }
+    }{
+        \Gamma \vdash A
+    }
+    \and
+    \inferrule* [Right=($\land E$)] {
+        \Gamma \vdash A \land B
+        \\
+        \inferrule* [Right=($Axiom$)] {
+        }{
+            \Gamma, A, B \vdash B
+        }
+    }{
+        \Gamma \vdash B
+    }
+\end{mathpar}
+Il apparaît clairement que les tactiques $\land E_L$ et $\land E_R$ sont des instances de la règle $\land E$ et qu'il suffit de prouver le deuxième sous-but avec la tactique de l'axiome. Pour cela il faut pouvoir indiquer à une tactique le but sur lequel on souhaite l'appliquer. L'implémentation est simple, il suffit d'indicer les trous de l'arbre de preuve en construction puis de spécifier l'indice pour choisir le trou à remplacer.
+
+Pour le moment les tactiques sont restées peu complexes, mais par la suite, nous nous sommes penchés sur une tactique plus complexe : $Auto$. Notre tactique $Auto$ essaye tant que possible d'appliquer la règle d'introduction de l'implication. Puis, une fois que ce n'est plus possible, essayer d'appliquer la règle de l'axiome. Cette tactique soulève l'importance d'avoir des tactiques vérifiant qu'elles peuvent s'appliquer au préalable. En effet, sans cette vérification, l'application de l'introduction se produirait une infinité de fois.
+
+L'ordre dans lequel les tactiques sont appliquées à aussi une importance. Par exemple la tactique de l'élimination de la conjonction permet de créer des suites de conjonction arbitrairement longues et donc de créer des arbres de preuve de taille arbitrairement grande, ce qui rendrait l'utilisation des solveurs SMT inutiles, car au-delà d'un certain nombre de contraintes le temps qui est nécessaire pour les résoudre perds sa praticité. Il y a donc un intérêt à essayer de terminer la preuve le plus vite possible.
+
+\subsection{Détection et déclenchement automatique}
+\begin{enumerate}
+    \item C'est quoi détecter ? (Un peu déjà aborder avant avec les règles dérivées)
+    \item But, hypothèse, ou les deux
+    \item ordre des détections
+    \item Comparaison à auto débile
+    \item Détails d'implem : trop de détections, ou plusieurs fois appliquer la même
+\end{enumerate}
+
+\subsection{Un langage pour détecter}
+\begin{enumerate}
+    \item Motivation : détection de formules passait pour le moment par des cas écris à la main, intéressant d'avoir un langage qui serait interprété pour détecter les formules, permettrait de faire des choses plus complexes, plus facilement, et plus rapidement
+    \item Syntaxe
+    \item Implémentation
+\end{enumerate}
+
+\section{Début d'implémentation dans Coq} \label{Implémentation}
+(Ça ce n'est pas encore fait, mais c'est prévu)
+
+\section{Conclusion}
+\subsection{Notre contribution et nos résultats}
+\subsection{Perspectives}
+
+\appendix
+\section{Institution d'accueil}
+
+Le Laboratoire Méthodes Formelles (LMF) a été créé le 1er janvier 2021 suite à une décision politique des institutions qui le soutiennent, à savoir l'Université Paris-Saclay, le CNRS, l'ENS Paris-Saclay, Inria et CentraleSupélec. L'objectif principal du LMF est de se concentrer sur les méthodes formelles. Il regroupe le Laboratoire Spécification et Vérification (LSV, ENS Paris-Saclay, CNRS, Inria) et l'équipe Vals du Laboratoire de Recherche en Informatique (LRI, Université Paris-Saclay, CNRS, Inria, CentraleSupélec), ce qui représente environ une centaine de personnes.
+Le LMF aspire à utiliser les méthodes formelles comme outil d'analyse, de modélisation et de raisonnement pour les programmes informatiques dans le but de s'assurer du fonctionnement correct des logiciels et du matériel.
+La structure du LMF est basée sur plusieurs pôles : il comprend deux pôles centraux, "Preuves" et "Modèles", qui représentent son cœur d'activité. Le troisième pôle, "Interactions", constitue une ouverture vers d'autres domaines tels que l'intelligence artificielle et la biologie.
+
+\end{document}
