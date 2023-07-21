@@ -36,7 +36,7 @@ Les assistants de preuve sont des logiciels permettant de construire une preuve 
 Une preuve formelle est une démonstration construite à l'aide de règles de déduction. Ces règles sont aux briques de base de transformations appelées tactiques dans Coq. La proposition à démontrer, aussi appelé but, est modifiée ou décomposée en sous but à l'aide de ces tactiques. Lorsque tous les sous buts sont des propositions sont des axiomes ou des propositions déjà démontrées, la preuve est terminée. Les axiomes sont des propositions qui sont considérées comme vraies sans avoir besoin d'être démontrées. Les propositions supposées ou déjà démontrées sont appelées hypothèses. Une preuve formelle est donc une séquence d'étapes, chacune étant une proposition vraie, qui permet de démontrer le but.
 
 \subsection{Un peu d'automatisation}
-La construction d'une preuve formelle est un travail fastidieux et chronophage. En effet, des propositions paraissant évidentes peuvent nécessiter de nombreuses étapes. Il est donc nécessaire de trouver des moyens d'automatiser certaines étapes de la preuve. De nombreux travaux ont déjà étés réalisés avec pour objectif d'intégrer des solveurs SMT dans des assistants de preuve.
+La construction d'une preuve formelle est un travail fastidieux et chronophage. En effet, des propositions paraissant évidentes peuvent nécessiter de nombreuses étapes. Il est donc nécessaire de trouver des moyens d'automatiser certaines étapes de la preuve. De nombreux travaux ont déjà étés réalisés avec pour objectif d'intégrer des solveurs SMT dans des assistants de preuve \cite{DBLP:conf/cpp/ArmandFGKTW11}.
 
 % TODO : Correction : ils sont pas juste limités à logique du premier ordre sans quantificateur
 % TODO : Deux modules :
@@ -133,8 +133,8 @@ L'ordre dans lequel les tactiques sont appliquées à aussi une importance. Par 
 \subsection{Détection et déclenchement automatique}
 \begin{enumerate}
     \item C'est quoi détecter ? (Un peu déjà aborder avant avec les règles dérivées)
-    \item But, hypothèse, ou les deux
-    \item ordre des détections
+    \item But, hypothèse, ou les deux.
+    \item Ordre des détections
     \item Comparaison à auto débile
     \item Détails d'implem : trop de détections, ou plusieurs fois appliquer la même
 \end{enumerate}
@@ -153,11 +153,16 @@ L'ordre dans lequel les tactiques sont appliquées à aussi une importance. Par 
 \subsection{Notre contribution et nos résultats}
 \subsection{Perspectives}
 
+\newpage
 \appendix
 \section{Institution d'accueil}
 
 Le Laboratoire Méthodes Formelles (LMF) a été créé le 1er janvier 2021 suite à une décision politique des institutions qui le soutiennent, à savoir l'Université Paris-Saclay, le CNRS, l'ENS Paris-Saclay, Inria et CentraleSupélec. L'objectif principal du LMF est de se concentrer sur les méthodes formelles. Il regroupe le Laboratoire Spécification et Vérification (LSV, ENS Paris-Saclay, CNRS, Inria) et l'équipe Vals du Laboratoire de Recherche en Informatique (LRI, Université Paris-Saclay, CNRS, Inria, CentraleSupélec), ce qui représente environ une centaine de personnes.
 Le LMF aspire à utiliser les méthodes formelles comme outil d'analyse, de modélisation et de raisonnement pour les programmes informatiques dans le but de s'assurer du fonctionnement correct des logiciels et du matériel.
 La structure du LMF est basée sur plusieurs pôles : il comprend deux pôles centraux, "Preuves" et "Modèles", qui représentent son cœur d'activité. Le troisième pôle, "Interactions", constitue une ouverture vers d'autres domaines tels que l'intelligence artificielle et la biologie.
+
+\newpage
+\bibliography{bibliography}
+\bibliographystyle{plain}
 
 \end{document}
