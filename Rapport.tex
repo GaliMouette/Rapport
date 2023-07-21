@@ -5,9 +5,10 @@
 
 \usepackage{mathpartir}
 
+\begin{document}
+
 \title{
     Stage :\\[1em]
-    % Application spontanée de transformations pour raisonnement automatique en théorie des types dépendants
     Application spontanée de transformations logiques en assistance au raisonnement automatique
 }
 \date{Du 5 juin au 28 juillet 2023}
@@ -21,13 +22,14 @@
     Louise~DUBOIS~DE~PRISQUE\footnotemark[2]
     \vspace{2em}
 }
-
-\begin{document}
-
 \maketitle
+
+
 
 \tableofcontents
 \newpage
+
+
 
 \section{Introduction}
 \subsection{Assistant de preuve et preuves formelles}
@@ -38,24 +40,21 @@ Une preuve formelle est une démonstration construite à l'aide de règles de d�
 \subsection{Un peu d'automatisation}
 La construction d'une preuve formelle est un travail fastidieux et chronophage. En effet, des propositions paraissant évidentes peuvent nécessiter de nombreuses étapes. Il est donc nécessaire de trouver des moyens d'automatiser certaines étapes de la preuve. De nombreux travaux ont déjà étés réalisés avec pour objectif d'intégrer des solveurs SMT dans des assistants de preuve \cite{DBLP:conf/cpp/ArmandFGKTW11}.
 
-% TODO : Correction : ils sont pas juste limités à logique du premier ordre sans quantificateur
-% TODO : Deux modules :
-% TODO : - module logique propositionnelle : pas de quantificateur
-% TODO : - module théorie : Ajoute axiomes et quelques constantes et quelques fonctions, cherches des instances pour les quantificateurs
-% TODO : SAT trouve valuation/modèle, si formule compatible avec quantif alors OK, si ne marche pas au niveau quantif on relance SAT avec d'autres valuation
-Ces solveurs SMT (Satisfiability modulo theories) sont des logiciels permettant de résoudre des problèmes de décision. Cependant, ils sont limités à des formules de la logique du premier ordre et sont combinés à des théories pour permettre de résoudre des formules plus complexes. Les théories les plus utilisées sont la théorie de l'égalité, la théorie de l'arithmétique linéaire sur les entiers et la théorie de l'arithmétique linéaire sur les réels.
+Ces solveurs SMT (Satisfiability modulo theories) sont des logiciels permettant de résoudre des problèmes de décision. Ils combinent un solveur de formules de la logique propositionnelle (Solveur SAT) à des théories pour permettre de résoudre des formules de la logique du 1\textsuperscript{er} ordre. Parmi les théories les plus utilisés nous trouvons la théorie de l'égalité, la théorie de l'arithmétique linéaire sur les entiers et la théorie de l'arithmétique linéaire sur les réels. Cependant, ils restent limités, l'instanciation des quantificateurs est un point faible, mais également la quantité de contraintes qu'ils peuvent résoudre. En effet, au-delà d'un certain nombre de contraintes, le temps nécessaire pour trouver une solution devient trop important pour être utilisé dans un assistant de preuve.
 
-L'assistant de preuve Coq repose sur le calcul des constructions inductives qui est une logique plus expressive que la logique du premier ordre. Il est donc nécessaire de pouvoir détecter les formules qui ne sont pas dans la logique du premier ordre et essayer de les traiter différemment.
+L'assistant de preuve Coq repose sur le calcul des constructions inductives qui est une logique plus expressive que la logique du 1\textsuperscript{er} ordre. Il est donc nécessaire de pouvoir détecter les formules qui ne sont pas dans la logique du premier ordre et essayer de les traiter différemment.
 
 % TODO : Peut être plus détailler section suivante
 % TODO : Exemples ?
 \subsection{Contexte et objectifs de ce stage}
-Les travaux de Louise et Chantal, en collaboration avec Valentin BLOT, s'intéressent déjà à ce sujet. Ils ont déjà implémenté plusieurs tactiques permettant de transformer des formules du calcul des constructions inductives en formules de la logique du 1\textsuperscript{er} ordre. Toutefois l'application de ces tactiques n'est pas toujours possible. Il est donc nécessaire de pouvoir détecter les formules sur lesquelles ces tactiques peuvent être appliquées.
+Les travaux de Louise et Chantal, en collaboration avec Valentin BLOT, s'intéressent déjà à ce sujet \cite{DBLP:journals/corr/abs-2107-02353,DBLP:journals/corr/abs-2204-02643,DBLP:conf/cpp/Blot0CPKMV23}. Ils ont déjà implémenté plusieurs tactiques permettant de transformer des formules du calcul des constructions inductives en formules de la logique du 1\textsuperscript{er} ordre. Toutefois l'application de ces tactiques n'est pas toujours possible. Il est donc nécessaire de pouvoir détecter les formules sur lesquelles ces tactiques peuvent être appliquées.
 
 Également, l'ordre de ces tactiques n'est pas anodin. En effet, certaines tactiques vont augmenter le nombre de tactiques qu'il est possible d'appliquer ce qui complexifie la recherche de preuve. Il est donc important de prendre en compte l'ordre dans lequel les appliquer.
 
 L'objectif de ce stage est de trouver un moyen de détecter les formules sur lesquelles les tactiques peuvent être appliquées ainsi que de trouver un ordre d'application de ces tactiques.
 Ma contribution consiste en un langage de spécification permettant de décrire les conditions d'application d'une tactique. Les descriptions dans ce langage sont ensuite assignées à une priorité et une tactique, puis interprétées. La tactique associée à la description la plus prioritaire est appliquée si les conditions sont vérifiées.
+
+
 
 \section{Prototypage} \label{Prototypage}
 Pour des raisons de complexité, nous avons commencé par réaliser un prototype avant de démarrer l'implémentation dans Coq. Ce prototype nous a permis de tester nos différentes idées, de nous rendre compte des difficultés qui peuvent être rencontrées, valider certains choix techniques et d'implémentation, ainsi que de nous familiariser avec les outils de développement. Pour cela nous avons utilisé un assistant de preuve, réalisé par Louise, implémentant la déduction naturelle intuitionniste propositionnelle. Ce projet est programmé en OCaml ce qui est un atout pour nous, car c'est le langage qui est utilisé pour implémenter Coq.
@@ -97,7 +96,6 @@ C'est ici que nous avons commis une erreur lors de l'implémentation des nouvell
 
 % TODO : Ajouter l'exemple avec exact_no_check en Coq
 Par ailleurs, cette distinction entre le noyau et les tactiques soulève une autre problématique : En aucun cas les tactiques vont garantir que leurs conditions d'applications sont respectées. Par exemple, si notre but est une conjonction, il serait utile d'interdire d'utiliser la règle d'introduction de la disjonction. Certes la vérification a posteriori par le noyau va rencontrer une erreur, cependant rien n'empêche l'utilisateur de l'utiliser. Pour pallier ce problème, nous avons ajouté aux tactiques une vérification. Celle-ci permet de s'assurer que les conditions d'applications sont respectées. Si ce n'est pas le cas, la tactique ne s'applique pas et un message d'erreur est affiché. Cette vérification n'est pas réalisée par le noyau, mais est déclenchée par la tactique. Cela permet de garder la séparation entre les deux entités et de ne pas ajouter de code dans le noyau. C'est également une première étape vers la détection et le déclenchement automatique de tactiques.
-
 
 \subsection{Composition de tactiques}
 En nous référant à la partie \ref{SpecsTactiques}, dans laquelle nous présentons de nouvelles règles concernant l'élimination du connecteur $\land$, nous pouvons remarquer que ces règles sont dérivables de la règle $\land E$. Cela signifie que nous pouvons les obtenir en combinant la règle $\land E$ avec d'autres règles. Voici les arbres de preuve correspondant à ces dérivations :
@@ -146,23 +144,30 @@ L'ordre dans lequel les tactiques sont appliquées à aussi une importance. Par 
     \item Implémentation
 \end{enumerate}
 
+
+
 \section{Début d'implémentation dans Coq} \label{Implémentation}
 (Ça ce n'est pas encore fait, mais c'est prévu)
+
+
 
 \section{Conclusion}
 \subsection{Notre contribution et nos résultats}
 \subsection{Perspectives}
 
+
+
 \newpage
 \appendix
 \section{Institution d'accueil}
-
 Le Laboratoire Méthodes Formelles (LMF) a été créé le 1er janvier 2021 suite à une décision politique des institutions qui le soutiennent, à savoir l'Université Paris-Saclay, le CNRS, l'ENS Paris-Saclay, Inria et CentraleSupélec. L'objectif principal du LMF est de se concentrer sur les méthodes formelles. Il regroupe le Laboratoire Spécification et Vérification (LSV, ENS Paris-Saclay, CNRS, Inria) et l'équipe Vals du Laboratoire de Recherche en Informatique (LRI, Université Paris-Saclay, CNRS, Inria, CentraleSupélec), ce qui représente environ une centaine de personnes.
 Le LMF aspire à utiliser les méthodes formelles comme outil d'analyse, de modélisation et de raisonnement pour les programmes informatiques dans le but de s'assurer du fonctionnement correct des logiciels et du matériel.
 La structure du LMF est basée sur plusieurs pôles : il comprend deux pôles centraux, "Preuves" et "Modèles", qui représentent son cœur d'activité. Le troisième pôle, "Interactions", constitue une ouverture vers d'autres domaines tels que l'intelligence artificielle et la biologie.
 
+
+
 \newpage
 \bibliography{bibliography}
-\bibliographystyle{plain}
+\bibliographystyle{unsrt}
 
 \end{document}
