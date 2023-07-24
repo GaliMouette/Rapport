@@ -53,12 +53,83 @@ Les travaux de Louise et Chantal, en collaboration avec Valentin BLOT, s'intére
 
 Également, l'ordre de ces tactiques n'est pas anodin. Certaines tactiques vont augmenter le nombre de tactiques qu'il est possible d'appliquer ce qui complexifie la recherche de preuve ainsi augmentant la charge de travail de l'utilisateur. Nous prêter un soin particulier à l'ordre dans lequel les appliquer. Nous avons déjà remarqué pendant nos expériences que certaines tactiques sont souvent appliquées dans le même ordre.
 
-L'objectif de ce stage est de trouver un moyen de détecter les formules sur lesquelles les tactiques peuvent être appliquées ainsi que de trouver un ordre d'application de ces tactiques. Ma contribution consiste en un langage de spécification permettant de décrire les conditions d'application d'une tactique. Les descriptions écrites dans ce langage sont ensuite assignées à une priorité et une tactique, puis interprétées. La tactique associée à la description la plus prioritaire dont les conditions sont vérifiées est appliquée.
+L'objectif de ce stage est de trouver un moyen de détecter les formules sur lesquelles les tactiques peuvent être appliquées ainsi que de trouver un ordre d'application de ces tactiques.
+
+Ma contribution consiste en un langage de spécification permettant de décrire les conditions d'application d'une tactique. Les descriptions écrites dans ce langage sont ensuite assignées à une priorité et une tactique, puis interprétées. La tactique associée à la description la plus prioritaire dont les conditions sont vérifiées est appliquée.
+
+% TODO : Rajouter petit plan ici
+% TODO : Rajouter lien vers code (github)
+
+% Nouveau plan :
+\section{Environnement de travail}
+\subsection{Un prototype}
+\begin{enumerate}
+    \item Explication pourquoi prototype : complexité, difficulté, choix techniques, familiarisation avec les outils de développement, \dots
+    \item Élimine probl metalanage coq, concernter sur ce que je faire et pas les problèmes de coq
+\end{enumerate}
+\subsection{Le mini assistant de preuve}
+\begin{enumerate}
+    \item Présentation travail de Louise, implémentation en OCaml, déduction naturelle intuitionniste propositionnelle, fonctionnement (noyau, tactiques, vérification, construction arbre preuve), \dots
+    \item Exemple preuve avant modifs ?
+\end{enumerate}
+\section{Réalisation} % Anciennement \section{Prototypage}
+\subsection{De nouvelles tactiques}
+\subsubsection{Spécifications techniques}
+Se référer à la rédaction précédente
+\begin{enumerate}
+    \item Démo avec $\land E$, $\land E_L$ et $\land E_R$.
+    \item Ajout ne change pas la logique, juste simplifie construction avec moins d'étapes
+    \item Effectivement génère moins de sous-buts
+    \item Pas de problème de construction, car dérivable
+    \item Expliquer dérivable : instances spécifiques de la règle $\land E$, correspond à un arbre en lui-même. Peut-être mettre dérivation en annexe ?
+\end{enumerate}
+\subsubsection{Implémentation}
+Se référer à la rédaction précédente
+\begin{enumerate}
+    \item Erreur : pas respectée séparation noyau/tactiques, pas vérifié que ça n'avait pas d'impacts indésirés
+    \item Retour en arrière, composition avec tactiques existantes
+    \item Problème rencontré : pas de vérification que les conditions d'applications sont respectées
+    \item Similaire avec Coq : exact-no-check
+    \item Ajouter vérification dans les tactiques, sans passer par le noyau
+    \item Première étape vers la composition de tactique
+\end{enumerate}
+\subsection{Composition de tactiques}
+Se référer à la rédaction précédente
+\subsection{Détection et déclenchement automatique}
+\begin{enumerate}
+    \item C'est quoi détecter ? (Un peu déjà aborder avant avec les règles dérivées)
+    \item But, hypothèse ou les deux.
+    \item Spoiler : hint vers  le langage de spécification
+    \item Ordre des détections
+    \item Comparaison à auto-débile. (Test avant vs continuer si pas échec)
+    \item Détails d'implem : trop de détections ou plusieurs fois appliquer la même
+\end{enumerate}
+\subsection{Un langage pour détecter}
+\begin{enumerate}
+    \item Syntaxe
+    \item Détection de formules passait pour le moment par des cas écris à la main
+    \item Intéressant d'avoir un langage qui serait interprété pour détecter les formules
+    \item Permettrait de faire des choses plus complexes, plus facilement, et plus rapidement
+    \item Exemple / implémentation
+\end{enumerate}
+% \section{Début d'implémentation dans Coq}
+%  (Ça ce n'est pas encore fait, mais c'est prévu) Je crois que ça ne se fera pas.
+\section{Conclusion et perspectives}
+\subsection{Notre contribution et nos résultats}
+Faut répéter en isolant important. (Tactiques qui disent si elles s'applique, le langage)
+\subsection{Perspectives}
+\begin{enumerate}
+    \item expériences avec LTac2 (en partie déjà faites)
+    \item intégration dans Coq
+    \item rechercher plus en profondeur sur ordre, pour instant c'est basé sur de l'expérimental et intuition (celle qui conplexifie pas en premier) mais rien de formel pour le moment.
+\end{enumerate}
+
+
 
 
 
 \section{Prototypage} \label{Prototypage}
-Pour des raisons de complexité, nous avons commencé par réaliser un prototype avant de démarrer l'implémentation dans Coq. Ce prototype nous a permis de tester nos différentes idées, de nous rendre compte des difficultés qui peuvent être rencontrées, valider certains choix techniques et d'implémentation, ainsi que de nous familiariser avec les outils de développement. Pour cela nous avons utilisé un assistant de preuve, réalisé par Louise, implémentant la déduction naturelle intuitionniste propositionnelle. Ce projet est programmé en OCaml ce qui est un atout pour nous, car c'est le langage qui est utilisé pour implémenter Coq.
+Pour des raisons de complexité, nous avons commencé par réaliser un prototype avant de démarrer l'implémentation dans Coq. Ce prototype nous a permis de tester nos différentes idées, de nous rendre compte des difficultés qui peuvent être rencontrées, valider certains choix techniques et d'implémentation, ainsi que de nous familiariser avec les outils de développement. Pour cela nous avons utilisé un mini assistant de preuve, réalisé par Louise, implémentant la déduction naturelle intuitionniste propositionnelle. Ce projet est programmé en OCaml ce qui est un atout pour nous, car c'est le langage qui est utilisé pour implémenter Coq.
 
 \subsection{De nouvelles tactiques}
 \subsubsection{Spécifications techniques :} \label{SpecsTactiques}
