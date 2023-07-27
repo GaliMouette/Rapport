@@ -132,23 +132,23 @@ L'automatisation de la construction de preuve se fait par l'utilisation de tacti
 Dans cette sous-section nous présentons un exemple de tactique avec un comportement simple dont nous détaillons les spécifications techniques et l'implémentation. Nous présenterons également un exemple de tactique avec un comportement plus complexe dans la section \ref{CompositionTactiques}.
 
 \subsubsection{Spécifications techniques} \label{SpecsTactiques}
-Les nouvelles tactiques implémentées sont les suivantes : $\land E_L$ et $\land E_R$. Elles sont définies comme suit :
+Les nouvelles tactiques implémentées sont les suivantes : $\land_{E_L}$ et $\land_{E_R}$. Elles sont définies comme suit :
 \begin{mathpar}
-    \inferrule* [Right=($\land E_L$)] {
+    \inferrule* [Right=($\land_{E_L}$)] {
         \Gamma \vdash A \land B
     }{
         \Gamma \vdash A
     }
     \and
-    \inferrule* [Right=($\land E_R$)] {
+    \inferrule* [Right=($\land_{E_R}$)] {
         \Gamma \vdash A \land B
     }{
         \Gamma \vdash B
     }
 \end{mathpar}
-Toutes les deux permettent d'éliminer le connecteur $\land$. Également, elles sont dérivables de la règle $\land E$. Cela signifie que nous pouvons les obtenir en combinant d'autres règles. Cette combinaison peut s'exprimer sous la forme d'un arbre de preuve. Voici les arbres de preuve correspondant à ces dérivations, à gauche la règle $\land E_L$ et à droite la règle $\land E_R$ :
+Toutes les deux permettent d'éliminer le connecteur $\land$. Également, elles sont dérivables de la règle $\land_E$. Cela signifie que nous pouvons les obtenir en combinant d'autres règles. Cette combinaison peut s'exprimer sous la forme d'un arbre de preuve. Voici les arbres de preuve correspondant à ces dérivations, à gauche la règle $\land_{E_L}$ et à droite la règle $\land_{E_R}$ :
 \begin{mathpar}
-    \inferrule* [Right=($\land E$)] {
+    \inferrule* [Right=($\land_E$)] {
         \Gamma \vdash A \land B
         \\
         \inferrule* [Right=($Axiom$)] {
@@ -159,7 +159,7 @@ Toutes les deux permettent d'éliminer le connecteur $\land$. Également, elles 
         \Gamma \vdash A
     }
     \and
-    \inferrule* [Right=($\land E$)] {
+    \inferrule* [Right=($\land_E$)] {
         \Gamma \vdash A \land B
         \\
         \inferrule* [Right=($Axiom$)] {
@@ -172,7 +172,7 @@ Toutes les deux permettent d'éliminer le connecteur $\land$. Également, elles 
 \end{mathpar}
 Et les règles utilisées pour les dériver sont les suivantes :
 \begin{mathpar}
-    \inferrule* [Right=($\land E$)] {
+    \inferrule* [Right=($\land_E$)] {
         \Gamma \vdash A \land B
         \\
         \Gamma, A, B \vdash C
@@ -187,12 +187,13 @@ Et les règles utilisées pour les dériver sont les suivantes :
 Ces arbres de preuves affiche clairement pourquoi ces tactiques simplifie la construction de preuve. Au lieu d'appliquer la règle $\land E$ puis la règle $Axiom$, nous pouvons directement appliquer la règle $\land E_L$ ou $\land E_R$. Cela permet de générer moins de sous-buts. La recherche est plus courte. L'ajout de ces tactiques ne change pas la logique sous-jacente puisqu'il était déjà possible d'appliquer manuellement les deux tactiques. C'est un premier pas vers l'automatisation de la construction de preuve.
 
 \subsubsection{Implémentation}
-Nous avons choisi pour implémenter chaque nouvelle tactique de créer une fonction dédiée. Celle-ci s'occupe de la création du morceau de l'arbre de preuve. Sa conception peut se faire de différentes façons :
-\begin{itemize}
+Nous avons choisi pour implémenter chaque nouvelle tactique de créer une fonction dédiée. Celle-ci s'occupe de la création du morceau de l'arbre de preuve. Sa conception peut se faire de deux façons :
+\begin{enumerate}
     \item Introduire un nouveau type de nœud dans l'arbre de preuve. Cependant, pour chaque nouveau type de nœud cette méthode implique de rajouter du code au noyau pour le vérifier. Cela va à l'encontre de la séparation entre le noyau et les tactiques mentionné dans la section \ref{FonctionnementPrototype}. Cette méthode n'est donc pas recommandée et ne sera pas utilisée.
     \item Utiliser les arbres de preuves des dérivations décrites dans la section \ref{SpecsTactiques}. Les types des nœuds nécessaires pour créer un tel arbre sont déjà présents dans le noyau et leur vérification est déjà implémentée. Cette méthode ne nécessite pas de rajouter du code au noyau. C'est donc celle que nous avons choisie. Cependant, un arbre produit par cette méthode est plus grand qu'un arbre produit par la méthode précédente. Il contient plus de nœuds et donc le temps nécessaire pour le vérifier est plus long.
-\end{itemize}
-Pour implémenter la méthode que nous avons retenue, nous avons besoin de créer un morceau d'arbre de preuve. La conception de ce morceau peut se faire, soit en composant les types de nœuds de l'arbre, soit en composant les fonctions existantes. Nous abordons ces points dans la section \ref{CompositionTactiques}, où nous présentons également un exemple de tactique avec un comportement plus complexe.
+\end{enumerate}
+
+Pour implémenter la méthode que nous avons retenue, nous avons besoin de créer un morceau d'arbre de preuve. La conception de ce morceau peut se faire, soit en composant les types de nœuds de l'arbre, soit en composant les fonctions existantes. Nous abordons ces points prochainement, dans la section \ref{CompositionTactiques}, où nous présentons également un exemple de tactique avec un comportement plus complexe.
 
 \begin{comment}
 \subsection*{Composition de tactiques (ancienne rédaction)}
@@ -228,40 +229,62 @@ L'ordre dans lequel les tactiques sont appliquées à aussi une importance. Par 
 \end{comment}
 
 \subsection{Composition de tactiques} \label{CompositionTactiques}
-Dans la méthode retenue, la fonction crée un morceau d'arbre de preuve. L'élaboration de ce morceau peut se faire de différentes façons :
-\begin{itemize}
-    \item Dans la fonction, construire le morceau d'un trait en utilisant les types de nœuds. Cette méthode est simple à mettre en œuvre, mais elle est peu flexible. Par exemple, supposons un raccourci appliquant deux fois la tactique $\to E$ transformant la formule $\Gamma \vdash A \to B \to C$ en $\Gamma, A, B \vdash C$. L'utilisation de ce raccourci sur la formule $\Gamma \vdash A \to B \to C \to D$ produit le résultat $\Gamma, A, B \vdash C \to D$. Cependant, pour l'utilisateur, il est naturel qu'utiliser une fois de plus la tactique produirait $\Gamma, A, B, C \vdash D$. Un nouveau raccourci est nécessaire pour obtenir ce comportement, ce qui implique une nouvelle fonction, avec un morceau d'arbre de preuve différent, etc. Et ce pour chaque comportement possible. Le problème est que la fonction requiert de connaitre la taille et la forme du morceau d'arbre de preuve à l'avance. Le comportement est donc fixé lors de la conception de la tactique. La rigidité de cette méthode est un problème. Elle ne permet pas de créer des tactiques génériques. C'est pourquoi nous ne l'avons pas retenue.
-    \item Faire successivement appel à chacune des fonctions, déjà existantes, qui construisent les nœuds composant l'arbre. Cette méthode est plus complexe à mettre en œuvre, mais elle est plus flexible. Elle permet de construire des morceaux d'arbre de preuve de taille et de forme variable en utilisant les fonctionnalités du langage de programmation. Reprenons l'exemple précédent. Notre fonction pourrait appliquer tant que possible la tactique $\to E$ jusqu'à l'échec, ou même compter le nombre de $\to$ dans le but et appliquer la tactique $\to E$ ce nombre de fois. Cela permet de créer des tactiques génériques. C'est pourquoi nous avons retenu cette méthode.
-\end{itemize}
+Dans la méthode retenue, la fonction crée un morceau d'arbre de preuve.
+Nous commençons par présenter deux façons de concevoir ce morceau. Ensuite présentons une tactique ajoutée au prototype, illustrant la composition de tactiques.
 
-Pour implémenter la méthode retenue, nous avons identifié les approches suivantes :
+\subsubsection{Méthode 1}
+Dans la fonction, construire le morceau d'un trait en utilisant les types de nœuds. Cette méthode est simple à mettre en œuvre, mais elle est peu flexible. Par exemple, supposons un raccourci appliquant deux fois la tactique $\to_I$. Voici l'arbre correspondant à ce raccourci, ainsi que la définition de la règle $\to_I$ :
+\begin{mathpar}
+    \inferrule* [Right=($\to_I$)] {
+        \inferrule* [Right=($\to_I$)] {
+            \Gamma, A, B \vdash C
+        }{
+            \Gamma, A \vdash B \to C
+        }
+    }{
+        \Gamma \vdash A \to B \to C
+    }
+    \and
+    \inferrule* [Right=($\to_I$)] {
+        \Gamma, A \vdash B
+    }{
+        \Gamma \vdash A \to B
+    }
+\end{mathpar}
 
+L'utilisation de ce raccourci sur la formule $\Gamma \vdash A \to B \to C \to D$ produit le résultat $\Gamma, A, B \vdash C \to D$. Cependant, pour l'utilisateur, il est naturel de continuer d'appliquer la règle $\to_I$ pour obtenir $\Gamma, A, B, C \vdash D$. Un nouveau raccourci est nécessaire pour obtenir ce comportement, ce qui implique une nouvelle fonction, avec un morceau d'arbre de preuve différent, etc. Il faut créer une infinité de raccourcis pour obtenir tous les comportements possibles.
 
+Le problème est que cette méthode requiert de connaitre la taille et la forme du morceau d'arbre de preuve à l'avance. Le comportement est donc fixé lors de la conception de la tactique. Cette rigidité ne permet pas de créer des tactiques génériques. C'est pourquoi nous ne l'avons pas retenue.
 
-Il existe également une variante semblable à la méthode choisie. Au lieu de créer le nouvel arbre d'un trait dans la fonction, elle consiste à utiliser l'une après l'autre les fonctions déjà existantes. C'est une procédure plus complexe à mettre en œuvre, car elle requiert de composer des tactiques. Cette méthode et la problématique de composition de tactique seront abordées dans la section \ref{CompositionTactiques}.
+\subsubsection{Méthode 2} Faire successivement appel à chacune des fonctions, déjà existantes, qui construisent les nœuds composant l'arbre. Cette méthode est plus complexe à mettre en œuvre, mais elle est plus flexible. Elle permet de construire des morceaux d'arbre de preuve de taille et de forme variable en utilisant les fonctionnalités du langage de programmation telles que les boucles, les expressions conditionnelles, etc.
 
+Reprenons l'exemple précédent. Notre fonction pourrait, par le biais d'une boucle, tester et tant que possible appliquer la tactique $\to E$. Le test prendre place a posteriori, par exemple l'application de la tactique déclenche une erreur si elle n'est pas applicable. Ou a priori, en analysant la formule. Une autre solution, similaire au test a priori, serait d'explorer la formule intelligemment pour compter le nombre de $\to$ et appliquer la tactique $\to E$ ce nombre de fois.
 
-
-
-Se référer à la rédaction précédente
+Cette méthode permet de créer des tactiques génériques avec un comportement complexe. C'est pourquoi nous avons retenu cette méthode. Cependant, elle ajoute beaucoup de complexité. Comme élaboré dans l'exemple, elle requiert deux fonctionnalités :
 \begin{enumerate}
-    \item Exemple auto : problème, connais pas à l'avance la taille de l'arbre. Donc methodes de section prec sont pas utilisables.
-    \item Problème rencontré : pas de vérification que les conditions d'applications sont respectées
-    \item Similaire avec Coq : exact-no-check
-    \item Ajouter vérification dans les tactiques, sans passer par le noyau
-    \item Étape de plus vers automatisation
+    \item Savoir si une tactique est applicable ou non. En amont de l'application ou dans son résultat.
+    \item Explorer la formule.
 \end{enumerate}
+Nous développons sur ces deux fonctionnalités à la section \ref{DetectionDeclenchement}.
 
+\subsubsection{Extension du prototype}
+L'exemple utilisé pour illustrer la méthode 2 a servi d'inspiration pour une nouvelle tactique. Cette tactique se compose de deux étapes : réduire une formule en une formule atomique et si la formule à prouver se trouve dans les hypothèses alors appliquer la tactique de l'axiome. La première étape signifie transformer formule constituée d'une chaine d'implications en une formule dépourvue d'implication. Ceci correspond à transformer une formule de la forme $\Gamma \vdash A \to B \to \dots \to C $ vers une formule $\Gamma, A, B, \dots \vdash C$. La seconde étape consiste à vérifier si la formule à prouver se trouve dans les hypothèses. Si c'est le cas, la tactique de l'axiome est appliquée. Sinon rien ne se passe et la main est rendue à l'utilisateur.
+
+Cette tactique combine astucieusement les fonctionnalités du langage de programmation pour créer un comportement complexe. Elle illustre la puissance de la méthode 2 et est un pas en avant vers l'automatisation. Cependant, elle n'est pas parfaite et devons prêter une attention particulière fonctionnalités requises mentionné dans la section \ref{Méthode 2}.
+
+% TODO : Peut être mentionner quelque part que tactique signifie la fonction qui construit noeud. Et que règle signifie la règle de déduction logique. Pour éviter confusion, car les règles de bases ont toutes une tactique du même nom.
 
 \subsection*{Détection et déclenchement automatique (ancienne rédaction)}
 \begin{enumerate}
+    \item Ajouter vérification dans les tactiques, sans passer par le noyau
     \item C'est quoi détecter ? (Un peu déjà aborder avant avec les règles dérivées)
     \item But, hypothèse ou les deux.
     \item Ordre des détections
     \item Comparaison à auto-débile.
     \item Détails d'implem : trop de détections ou plusieurs fois appliquer la même
 \end{enumerate}
-\subsection{Détection et déclenchement automatique}
+
+\subsection{Détection et déclenchement automatique} \label{DetectionDeclenchement}
 \begin{enumerate}
     \item C'est quoi détecter ? (Un peu déjà aborder avant avec les règles dérivées)
     \item But, hypothèse ou les deux.
