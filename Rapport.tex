@@ -3,7 +3,15 @@
 \usepackage[T1]{fontenc}
 \usepackage[french]{babel}
 
+% TODO : Remove comment package
+\usepackage{comment}
+
 \usepackage{mathpartir}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\definecolor{medium-blue}{rgb}{0,0,1}
+\hypersetup{colorlinks, urlcolor={medium-blue}}
 
 \begin{document}
 
@@ -35,16 +43,16 @@
 \subsection{Assistant de preuve et preuves formelles}
 Les assistants de preuve sont des logiciels permettant de construire une preuve formelle, parmi les plus connus nous pouvons citer Coq, Isabelle, Agda, Lean, ... Leur fonctionnement est basé sur l'interaction entre un humain et une machine. L'humain guide la recherche de preuve, en détaillant les étapes de la preuve et la machine sauvegarde ces étapes puis s'assure de leur validité.
 
-Une preuve formelle est une démonstration construite à l'aide de règles de déduction.
-Ces règles modifient proposition ou la décompose en sous-propositions. Ces règles forment les briques de base de transformations plus complexes, appelées tactiques dans Coq. La preuve se termine lorsque tous les sous-buts sont des axiomes ou des propositions déjà démontrées. Les axiomes sont des propositions qui sont considérées comme vraies sans avoir besoin d'être démontrées et les propositions supposées ou déjà démontrées sont appelées hypothèses. Une preuve formelle est donc une séquence de tactiques, chacune étant une proposition vraie, qui permettent de démontrer le but.
+Une preuve formelle est une démonstration construite à l'aide de règles de déduction. Ces règles modifient la proposition ou la décompose en sous-propositions. Ces règles forment les briques de base de transformations plus complexes, appelées tactiques dans Coq. La preuve se termine lorsque toutes les sous-propositions sont des axiomes ou des propositions déjà démontrées. Les axiomes sont des propositions qui sont considérées comme vraies sans avoir besoin d'être démontrées et les propositions supposées ou déjà démontrées sont appelées hypothèses. Une preuve formelle est donc une séquence de tactiques, chacune étant une proposition vraie, qui permettent de démontrer le but.
 
 \subsection{Un peu d'automatisation}
 La construction d'une preuve formelle est un travail fastidieux et chronophage. En effet, des propositions paraissant évidentes peuvent nécessiter de nombreuses étapes.
 Pour faciliter cette tâche nous pouvons nous pencher sur la question : Pouvons-nous automatiser certaines étapes ? De nombreux travaux ont déjà étés réalisés sur ce sujet. Parmi eux, certains ont pour objectif d'intégrer des solveurs SMT dans des assistants de preuve~\cite{DBLP:conf/cpp/ArmandFGKTW11}.
 
-Ces solveurs SMT (Satisfiability modulo theories) sont des logiciels permettant de résoudre des problèmes de décision. Ils combinent un solveur de formules de la logique propositionnelle (Solveur SAT) à des théories pour permettre de résoudre des formules de la logique du 1\textsuperscript{er} ordre. Parmi les théories les plus utilisés nous trouvons la théorie de l'égalité, la théorie de l'arithmétique linéaire sur les entiers et la théorie de l'arithmétique linéaire sur les réels. Cependant, ils restent limités, l'instanciation des quantificateurs est un point faible, mais également la quantité de contraintes fait rapidement croitre le temps de résolution.
+% TODO : Mettre mettre solveur SMT au singulier
+Un solveur SMT (Satisfiability modulo theories) est un logiciel permettant de résoudre des problèmes de décision. Ils combinent un solveur de formules de la logique propositionnelle (Solveur SAT) à des théories pour permettre de résoudre des formules de la logique du 1\textsuperscript{er} ordre. Parmi les théories les plus utilisés nous trouvons la théorie de l'égalité, la théorie de l'arithmétique linéaire sur les entiers et la théorie de l'arithmétique linéaire sur les réels. Cependant, un solveur SMT reste limité, l'instanciation des quantificateurs est un point faible et la quantité de contraintes fait rapidement croitre le temps de résolution.
 
-L'assistant de preuve Coq repose sur le calcul des constructions inductives qui est une logique plus expressive que la logique du 1\textsuperscript{er} ordre. Pour combiner un solveur SMT avec Coq, il est donc nécessaire de pouvoir détecter les formules qui ne sont pas dans la logique du 1\textsuperscript{er} ordre et essayer de les traiter en ammont.
+L'assistant de preuve Coq repose sur le calcul des constructions inductives. C'est une logique plus expressive que la logique du 1\textsuperscript{er} ordre. Pour combiner un solveur SMT avec Coq, il est donc nécessaire de pouvoir détecter une formule qui n'est pas de la logique du 1\textsuperscript{er} ordre et essayer de la traiter en amont.
 
 % TODO : Peut être plus détailler section suivante
 % TODO : Exemples ?
@@ -61,78 +69,26 @@ Ma contribution consiste en un langage de spécification permettant de décrire 
 % TODO : Rajouter lien vers code (github)
 
 % Nouveau plan :
+\begin{comment}
+\section*{Prototypage (ancienne rédaction)} \label{Prototypage}
+Pour des raisons de complexité, nous avons commencé par réaliser un prototype avant de démarrer l'implémentation dans Coq. Ce prototype nous a permis de tester nos différentes idées, de nous rendre compte des difficultés qui peuvent être rencontrées, valider certains choix techniques et d'implémentation, ainsi que de nous familiariser avec les outils de développement. Pour cela nous avons utilisé un mini assistant de preuve, réalisé par Louise, implémentant la déduction naturelle intuitionniste propositionnelle. Ce projet est programmé en OCaml ce qui est un atout pour nous, car c'est le langage qui est utilisé pour implémenter Coq.
+\end{comment}
+
 \section{Environnement de travail}
 \subsection{Un prototype}
-\begin{enumerate}
-    \item Explication pourquoi prototype : complexité, difficulté, choix techniques, familiarisation avec les outils de développement, \dots
-    \item Élimine probl metalanage coq, concernter sur ce que je faire et pas les problèmes de coq
-\end{enumerate}
-\subsection{Le mini assistant de preuve}
-\begin{enumerate}
-    \item Présentation travail de Louise, implémentation en OCaml, déduction naturelle intuitionniste propositionnelle, fonctionnement (noyau, tactiques, vérification, construction arbre preuve), \dots
-    \item Exemple preuve avant modifs ?
-\end{enumerate}
+Mes travaux sont réalisés sur la base d'un prototype produit par Louise. Ce prototype est un mini assistant de preuve reposant sur la déduction naturelle intuitionniste propositionnelle. Cette logique est moins expressive que le calcul des constructions inductives. Cependant, elle suffit pour les expériences réalisées. Ce mini assistant de preuve est programmé en OCaml. L'utilisation de ce langage est un atout. C'est le langage utilisé pour implémenter Coq. L'utilisation de ce prototype offre plus de liberté que d'utiliser Coq. La quantité de code à comprendre est moindre, de même que sa complexité. Le comportement de l'assistant de preuve est plus facile à prédire et à modifier. Cela permet de se concentrer pleinement sur les problématiques de détection et d'ordre. Le code du prototype initial est disponible sur GitHub\footnote{\url{https://github.com/louiseddp/MinITP}}.
+
+\subsection{Fonctionnement du prototype} \label{FonctionnementPrototype}
+Le prototype se décompose en deux parties : un module interagissant avec l'utilisateur et un noyau. Le module d'interaction avec l'utilisateur permet de lire les tactiques entrées par l'utilisateur, de les appliquer à la formule courante et d'afficher le résultat. L'application d'une tactique à la formule courante produit un arbre de preuve contenant les tactiques appliquées, ainsi que les sous-buts générés restant à prouver et modélisés par des trous. Quand l'arbre de preuve ne contient plus de trou, la preuve est terminée. Une fois terminée, le noyau s'assure de la validité de l'arbre de preuve nouvellement construit.
+
+La vérification de l'arbre de preuve est une étape cruciale, car une erreur logique dans celle-ci permettrait de prouver n'importe quelle formule. Ajouter du code au noyau est une tâche délicate et risque d'introduire des comportements inattendus. S'assurer que les changements apportés n'ont pas d'impacts indésirés est laborieux. C'est pourquoi le noyau est séparé du module d'interaction avec l'utilisateur. Cela permet de minimiser la quantité de code le composant et de réduire la confiance que nous devons lui accorder.
+
+% TODO : Exemple preuve avant modifs ?
+
 \section{Réalisation} % Anciennement \section{Prototypage}
-\subsection{De nouvelles tactiques}
-\subsubsection{Spécifications techniques}
-Se référer à la rédaction précédente
-\begin{enumerate}
-    \item Démo avec $\land E$, $\land E_L$ et $\land E_R$.
-    \item Ajout ne change pas la logique, juste simplifie construction avec moins d'étapes
-    \item Effectivement génère moins de sous-buts
-    \item Pas de problème de construction, car dérivable
-    \item Expliquer dérivable : instances spécifiques de la règle $\land E$, correspond à un arbre en lui-même. Peut-être mettre dérivation en annexe ?
-\end{enumerate}
-\subsubsection{Implémentation}
-Se référer à la rédaction précédente
-\begin{enumerate}
-    \item Erreur : pas respectée séparation noyau/tactiques, pas vérifié que ça n'avait pas d'impacts indésirés
-    \item Retour en arrière, composition avec tactiques existantes
-    \item Problème rencontré : pas de vérification que les conditions d'applications sont respectées
-    \item Similaire avec Coq : exact-no-check
-    \item Ajouter vérification dans les tactiques, sans passer par le noyau
-    \item Première étape vers la composition de tactique
-\end{enumerate}
-\subsection{Composition de tactiques}
-Se référer à la rédaction précédente
-\subsection{Détection et déclenchement automatique}
-\begin{enumerate}
-    \item C'est quoi détecter ? (Un peu déjà aborder avant avec les règles dérivées)
-    \item But, hypothèse ou les deux.
-    \item Spoiler : hint vers  le langage de spécification
-    \item Ordre des détections
-    \item Comparaison à auto-débile. (Test avant vs continuer si pas échec)
-    \item Détails d'implem : trop de détections ou plusieurs fois appliquer la même
-\end{enumerate}
-\subsection{Un langage pour détecter}
-\begin{enumerate}
-    \item Syntaxe
-    \item Détection de formules passait pour le moment par des cas écris à la main
-    \item Intéressant d'avoir un langage qui serait interprété pour détecter les formules
-    \item Permettrait de faire des choses plus complexes, plus facilement, et plus rapidement
-    \item Exemple / implémentation
-\end{enumerate}
-% \section{Début d'implémentation dans Coq}
-%  (Ça ce n'est pas encore fait, mais c'est prévu) Je crois que ça ne se fera pas.
-\section{Conclusion et perspectives}
-\subsection{Notre contribution et nos résultats}
-Faut répéter en isolant important. (Tactiques qui disent si elles s'applique, le langage)
-\subsection{Perspectives}
-\begin{enumerate}
-    \item expériences avec LTac2 (en partie déjà faites)
-    \item intégration dans Coq
-    \item rechercher plus en profondeur sur ordre, pour instant c'est basé sur de l'expérimental et intuition (celle qui conplexifie pas en premier) mais rien de formel pour le moment.
-\end{enumerate}
-
-
-
-
-
-\section{Prototypage} \label{Prototypage}
-Pour des raisons de complexité, nous avons commencé par réaliser un prototype avant de démarrer l'implémentation dans Coq. Ce prototype nous a permis de tester nos différentes idées, de nous rendre compte des difficultés qui peuvent être rencontrées, valider certains choix techniques et d'implémentation, ainsi que de nous familiariser avec les outils de développement. Pour cela nous avons utilisé un mini assistant de preuve, réalisé par Louise, implémentant la déduction naturelle intuitionniste propositionnelle. Ce projet est programmé en OCaml ce qui est un atout pour nous, car c'est le langage qui est utilisé pour implémenter Coq.
-
-\subsection{De nouvelles tactiques}
-\subsubsection{Spécifications techniques :} \label{SpecsTactiques}
+\begin{comment}
+\subsection*{De nouvelles tactiques (ancienne rédaction)}
+\subsubsection*{Spécifications techniques :} % \label{SpecsTactiques}
 Afin de mieux comprendre le fonctionnement des tactiques, nous avons commencé par en implémenter de nouvelles. L'ajout de tactiques ne change pas la logique sous-jacente, mais permet de simplifier la construction de preuve. Par exemple, pour l'élimination du connecteur $\land$ il existe une règle générique :
 % ! Peut être introduire ce que c'est les règles d'inférences ?
 \begin{mathpar}
@@ -161,15 +117,85 @@ Mais il est également possible d'établir des versions plus spécifiques de cet
 Ces règles sont dérivables de la règle $\land E$ en la combinant avec d'autres règles. Cependant, elles permettent de simplifier la construction de preuve. En effet, si nous avons une formule de la forme $A \land B$ et que nous voulons prouver $A$, nous pouvons utiliser la règle $\land E_L$ qui génère moins de sous-buts et donc une preuve plus courte que la règle $\land E$.
 % * Peut être un message (ou annexe) sur la correction de ces tactiques ? Tactiques dérivables ?
 
-\subsubsection{Implémentation :}
+\subsubsection*{Implémentation :}
 Afin de pouvoir commencer l'implémentation, il est nécessaire de comprendre comment les tactiques ont été conçues par Louise, ainsi que leur fonctionnement. Dans notre cas, l'assistant de preuve se décompose en deux parties. La première s'occupe de l'interaction avec l'utilisateur. Elle permet de lire les tactiques entrées par l'utilisateur, de les appliquer à la formule courante et d'afficher le résultat. L'application de ses tactiques à la formule courante produit un arbre de preuve contenant les tactiques appliquées, ainsi que les sous-buts générés restant à prouver et modélisés par des trous. La seconde partie s'assure de la validité de l'arbre de preuve nouvellement construit. Cette partie est cruciale, car une erreur logique dans celle-ci permettrait de prouver n'importe quelle formule.
 
 C'est ici que nous avons commis une erreur lors de l'implémentation des nouvelles tactiques. En ajoutant du code dans le noyau pour, il est possible que nous ayons introduit des comportements inattendus. Plutôt que d'essayer de nous assurer que nos changements n'avaient pas d'impacts indésirés, nous avons fait le choix de revenir en arrière et d'essayer de composer avec les tactiques existantes. Cela nous a permis de commencer à réfléchir à la manière de composer les tactiques. Cette erreur à permis de mettre en lumière le fait que les tactiques et le noyau sont deux entités distinctes et qu'il est important de les séparer. Cette séparation permet minimiser la quantité de code du noyau et donc de réduire la confiance que nous devons lui accorder.
 
 % TODO : Ajouter l'exemple avec exact_no_check en Coq
 Par ailleurs, cette distinction entre le noyau et les tactiques soulève une autre problématique : En aucun cas les tactiques vont garantir que leurs conditions d'applications sont respectées. Par exemple, si notre but est une conjonction, il serait utile d'interdire d'utiliser la règle d'introduction de la disjonction. Certes la vérification a posteriori par le noyau va rencontrer une erreur, cependant rien n'empêche l'utilisateur de l'utiliser. Pour pallier ce problème, nous avons ajouté aux tactiques une vérification. Celle-ci permet de s'assurer que les conditions d'applications sont respectées. Si ce n'est pas le cas, la tactique ne s'applique pas et un message d'erreur est affiché. Cette vérification n'est pas réalisée par le noyau, mais est déclenchée par la tactique. Cela permet de garder la séparation entre les deux entités et de ne pas ajouter de code dans le noyau. C'est également une première étape vers la détection et le déclenchement automatique de tactiques.
+\end{comment}
 
-\subsection{Composition de tactiques}
+\subsection{De nouvelles tactiques}
+L'automatisation de la construction de preuve se fait par l'utilisation de tactiques. C'est le seul médium permettant d'interagir avec l'assistant de preuve. Cette automatisation peut avoir un comportement très simple, comme une tactique combinant une application successive de tactiques au style d'un raccourci, ou bien légèrement plus complexe, comme une tactique cherchant à appliquer une autre tant que possible, ou encore très complexe, comme une tactique utilisant un logiciel externe de la même façon qu'une tactique de résolution faisant appel à un solveur SMT.
+
+Dans cette sous-section nous présentons un exemple de tactique avec un comportement simple dont nous détaillons les spécifications techniques et l'implémentation. Nous présenterons également un exemple de tactique avec un comportement plus complexe dans la section \ref{CompositionTactiques}.
+
+\subsubsection{Spécifications techniques} \label{SpecsTactiques}
+Les nouvelles tactiques implémentées sont les suivantes : $\land E_L$ et $\land E_R$. Elles sont définies comme suit :
+\begin{mathpar}
+    \inferrule* [Right=($\land E_L$)] {
+        \Gamma \vdash A \land B
+    }{
+        \Gamma \vdash A
+    }
+    \and
+    \inferrule* [Right=($\land E_R$)] {
+        \Gamma \vdash A \land B
+    }{
+        \Gamma \vdash B
+    }
+\end{mathpar}
+Toutes les deux permettent d'éliminer le connecteur $\land$. Également, elles sont dérivables de la règle $\land E$. Cela signifie que nous pouvons les obtenir en combinant d'autres règles. Cette combinaison peut s'exprimer sous la forme d'un arbre de preuve. Voici les arbres de preuve correspondant à ces dérivations, à gauche la règle $\land E_L$ et à droite la règle $\land E_R$ :
+\begin{mathpar}
+    \inferrule* [Right=($\land E$)] {
+        \Gamma \vdash A \land B
+        \\
+        \inferrule* [Right=($Axiom$)] {
+        }{
+            \Gamma, A, B \vdash A
+        }
+    }{
+        \Gamma \vdash A
+    }
+    \and
+    \inferrule* [Right=($\land E$)] {
+        \Gamma \vdash A \land B
+        \\
+        \inferrule* [Right=($Axiom$)] {
+        }{
+            \Gamma, A, B \vdash B
+        }
+    }{
+        \Gamma \vdash B
+    }
+\end{mathpar}
+Et les règles utilisées pour les dériver sont les suivantes :
+\begin{mathpar}
+    \inferrule* [Right=($\land E$)] {
+        \Gamma \vdash A \land B
+        \\
+        \Gamma, A, B \vdash C
+    }{
+        \Gamma \vdash C
+    }
+    \and
+    \inferrule* [Right=($Axiom$)] { } {
+        \Gamma, A \vdash A
+    }
+\end{mathpar}
+Ces arbres de preuves affiche clairement pourquoi ces tactiques simplifie la construction de preuve. Au lieu d'appliquer la règle $\land E$ puis la règle $Axiom$, nous pouvons directement appliquer la règle $\land E_L$ ou $\land E_R$. Cela permet de générer moins de sous-buts. La recherche est plus courte. L'ajout de ces tactiques ne change pas la logique sous-jacente puisqu'il était déjà possible d'appliquer manuellement les deux tactiques. C'est un premier pas vers l'automatisation de la construction de preuve.
+
+\subsubsection{Implémentation}
+Nous avons choisi pour implémenter chaque nouvelle tactique de créer une fonction dédiée. Celle-ci s'occupe de la création du morceau de l'arbre de preuve. Sa conception peut se faire de différentes façons :
+\begin{itemize}
+    \item Introduire un nouveau type de nœud dans l'arbre de preuve. Cependant, pour chaque nouveau type de nœud cette méthode implique de rajouter du code au noyau pour le vérifier. Cela va à l'encontre de la séparation entre le noyau et les tactiques mentionné dans la section \ref{FonctionnementPrototype}. Cette méthode n'est donc pas recommandée et ne sera pas utilisée.
+    \item Utiliser les arbres de preuves des dérivations décrites dans la section \ref{SpecsTactiques}. Les types des nœuds nécessaires pour créer un tel arbre sont déjà présents dans le noyau et leur vérification est déjà implémentée. Cette méthode ne nécessite pas de rajouter du code au noyau. C'est donc celle que nous avons choisie. Cependant, un arbre produit par cette méthode est plus grand qu'un arbre produit par la méthode précédente. Il contient plus de nœuds et donc le temps nécessaire pour le vérifier est plus long.
+\end{itemize}
+Pour implémenter la méthode que nous avons retenue, nous avons besoin de créer un morceau d'arbre de preuve. La conception de ce morceau peut se faire, soit en composant les types de nœuds de l'arbre, soit en composant les fonctions existantes. Nous abordons ces points dans la section \ref{CompositionTactiques}, où nous présentons également un exemple de tactique avec un comportement plus complexe.
+
+\begin{comment}
+\subsection*{Composition de tactiques (ancienne rédaction)}
 En nous référant à la partie \ref{SpecsTactiques}, dans laquelle nous présentons de nouvelles règles concernant l'élimination du connecteur $\land$, nous pouvons remarquer que ces règles sont dérivables de la règle $\land E$. Cela signifie que nous pouvons les obtenir en combinant la règle $\land E$ avec d'autres règles. Voici les arbres de preuve correspondant à ces dérivations :
 \begin{mathpar}
     \inferrule* [Right=($\land E$)] {
@@ -199,8 +225,35 @@ Il apparaît clairement que les tactiques $\land E_L$ et $\land E_R$ sont des in
 Pour le moment les tactiques sont restées peu complexes, mais par la suite, nous nous sommes penchés sur une tactique plus complexe : $Auto$. Notre tactique $Auto$ essaye tant que possible d'appliquer la règle d'introduction de l'implication. Puis, une fois que ce n'est plus possible, essayer d'appliquer la règle de l'axiome. Cette tactique soulève l'importance d'avoir des tactiques vérifiant qu'elles peuvent s'appliquer au préalable. En effet, sans cette vérification, l'application de l'introduction se produirait une infinité de fois.
 
 L'ordre dans lequel les tactiques sont appliquées à aussi une importance. Par exemple la tactique de l'élimination de la conjonction permet de créer des suites de conjonction arbitrairement longues et donc de créer des arbres de preuve de taille arbitrairement grande, ce qui rendrait l'utilisation des solveurs SMT inutiles, car au-delà d'un certain nombre de contraintes le temps qui est nécessaire pour les résoudre perds sa praticité. Il y a donc un intérêt à essayer de terminer la preuve le plus vite possible.
+\end{comment}
 
-\subsection{Détection et déclenchement automatique}
+\subsection{Composition de tactiques} \label{CompositionTactiques}
+Dans la méthode retenue, la fonction crée un morceau d'arbre de preuve. L'élaboration de ce morceau peut se faire de différentes façons :
+\begin{itemize}
+    \item Dans la fonction, construire le morceau d'un trait en utilisant les types de nœuds. Cette méthode est simple à mettre en œuvre, mais elle est peu flexible. Par exemple, supposons un raccourci appliquant deux fois la tactique $\to E$ transformant la formule $\Gamma \vdash A \to B \to C$ en $\Gamma, A, B \vdash C$. L'utilisation de ce raccourci sur la formule $\Gamma \vdash A \to B \to C \to D$ produit le résultat $\Gamma, A, B \vdash C \to D$. Cependant, pour l'utilisateur, il est naturel qu'utiliser une fois de plus la tactique produirait $\Gamma, A, B, C \vdash D$. Un nouveau raccourci est nécessaire pour obtenir ce comportement, ce qui implique une nouvelle fonction, avec un morceau d'arbre de preuve différent, etc. Et ce pour chaque comportement possible. Le problème est que la fonction requiert de connaitre la taille et la forme du morceau d'arbre de preuve à l'avance. Le comportement est donc fixé lors de la conception de la tactique. La rigidité de cette méthode est un problème. Elle ne permet pas de créer des tactiques génériques. C'est pourquoi nous ne l'avons pas retenue.
+    \item Faire successivement appel à chacune des fonctions, déjà existantes, qui construisent les nœuds composant l'arbre. Cette méthode est plus complexe à mettre en œuvre, mais elle est plus flexible. Elle permet de construire des morceaux d'arbre de preuve de taille et de forme variable en utilisant les fonctionnalités du langage de programmation. Reprenons l'exemple précédent. Notre fonction pourrait appliquer tant que possible la tactique $\to E$ jusqu'à l'échec, ou même compter le nombre de $\to$ dans le but et appliquer la tactique $\to E$ ce nombre de fois. Cela permet de créer des tactiques génériques. C'est pourquoi nous avons retenu cette méthode.
+\end{itemize}
+
+Pour implémenter la méthode retenue, nous avons identifié les approches suivantes :
+
+
+
+Il existe également une variante semblable à la méthode choisie. Au lieu de créer le nouvel arbre d'un trait dans la fonction, elle consiste à utiliser l'une après l'autre les fonctions déjà existantes. C'est une procédure plus complexe à mettre en œuvre, car elle requiert de composer des tactiques. Cette méthode et la problématique de composition de tactique seront abordées dans la section \ref{CompositionTactiques}.
+
+
+
+
+Se référer à la rédaction précédente
+\begin{enumerate}
+    \item Exemple auto : problème, connais pas à l'avance la taille de l'arbre. Donc methodes de section prec sont pas utilisables.
+    \item Problème rencontré : pas de vérification que les conditions d'applications sont respectées
+    \item Similaire avec Coq : exact-no-check
+    \item Ajouter vérification dans les tactiques, sans passer par le noyau
+    \item Étape de plus vers automatisation
+\end{enumerate}
+
+
+\subsection*{Détection et déclenchement automatique (ancienne rédaction)}
 \begin{enumerate}
     \item C'est quoi détecter ? (Un peu déjà aborder avant avec les règles dérivées)
     \item But, hypothèse ou les deux.
@@ -208,24 +261,57 @@ L'ordre dans lequel les tactiques sont appliquées à aussi une importance. Par 
     \item Comparaison à auto-débile.
     \item Détails d'implem : trop de détections ou plusieurs fois appliquer la même
 \end{enumerate}
+\subsection{Détection et déclenchement automatique}
+\begin{enumerate}
+    \item C'est quoi détecter ? (Un peu déjà aborder avant avec les règles dérivées)
+    \item But, hypothèse ou les deux.
+    \item Spoiler : hint vers  le langage de spécification
+    \item Ordre des détections
+    \item Comparaison à auto-débile. (Test avant vs continuer si pas échec)
+    \item Détails d'implem : trop de détections ou plusieurs fois appliquer la même
+\end{enumerate}
 
-\subsection{Un langage pour détecter}
+
+\subsection*{Un langage pour détecter (ancienne rédaction)}
 \begin{enumerate}
     \item Motivation : détection de formules passait pour le moment par des cas écris à la main, intéressant d'avoir un langage qui serait interprété pour détecter les formules, permettrait de faire des choses plus complexes, plus facilement, et plus rapidement
     \item Syntaxe
     \item Implémentation
 \end{enumerate}
+\subsection{Un langage pour détecter}
+\begin{enumerate}
+    \item Syntaxe
+    \item Détection de formules passait pour le moment par des cas écris à la main
+    \item Intéressant d'avoir un langage qui serait interprété pour détecter les formules
+    \item Permettrait de faire des choses plus complexes, plus facilement, et plus rapidement
+    \item Exemple / implémentation
+\end{enumerate}
+% \section{Début d'implémentation dans Coq}
+%  (Ça ce n'est pas encore fait, mais c'est prévu) Je crois que ça ne se fera pas.
 
 
-
-\section{Début d'implémentation dans Coq} \label{Implémentation}
-(Ça ce n'est pas encore fait, mais c'est prévu)
-
-
-
-\section{Conclusion}
+\section{Conclusion et perspectives}
 \subsection{Notre contribution et nos résultats}
+Faut répéter en isolant important. (Tactiques qui disent si elles s'applique, le langage)
 \subsection{Perspectives}
+\begin{enumerate}
+    \item expériences avec LTac2 (en partie déjà faites).
+    \item Implémentation de détection (première iteration) ressemble beaucoup fonctionnement LTac2, interprétation est vraiment nouveau.
+    \item intégration dans Coq
+    \item rechercher plus en profondeur sur ordre, pour instant c'est basé sur de l'expérimental et intuition (celle qui conplexifie pas en premier) mais rien de formel pour le moment.
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
