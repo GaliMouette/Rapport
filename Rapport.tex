@@ -232,7 +232,7 @@ L'ordre dans lequel les tactiques sont appliquées à aussi une importance. Par 
 Dans la méthode retenue, la fonction crée un morceau d'arbre de preuve.
 Nous commençons par présenter deux façons de concevoir ce morceau. Ensuite présentons une tactique ajoutée au prototype, illustrant la composition de tactiques.
 
-\subsubsection{Méthode 1}
+\subsubsection{Première méthode}
 Dans la fonction, construire le morceau d'un trait en utilisant les types de nœuds. Cette méthode est simple à mettre en œuvre, mais elle est peu flexible. Par exemple, supposons un raccourci appliquant deux fois la tactique $\to_I$. Voici l'arbre correspondant à ce raccourci, ainsi que la définition de la règle $\to_I$ :
 \begin{mathpar}
     \inferrule* [Right=($\to_I$)] {
@@ -256,23 +256,24 @@ L'utilisation de ce raccourci sur la formule $\Gamma \vdash A \to B \to C \to D$
 
 Le problème est que cette méthode requiert de connaitre la taille et la forme du morceau d'arbre de preuve à l'avance. Le comportement est donc fixé lors de la conception de la tactique. Cette rigidité ne permet pas de créer des tactiques génériques. C'est pourquoi nous ne l'avons pas retenue.
 
-\subsubsection{Méthode 2} Faire successivement appel à chacune des fonctions, déjà existantes, qui construisent les nœuds composant l'arbre. Cette méthode est plus complexe à mettre en œuvre, mais elle est plus flexible. Elle permet de construire des morceaux d'arbre de preuve de taille et de forme variable en utilisant les fonctionnalités du langage de programmation telles que les boucles, les expressions conditionnelles, etc.
+\subsubsection{Seconde méthode}
+Faire successivement appel à chacune des fonctions, déjà existantes, qui construisent les nœuds composant l'arbre. Cette méthode est plus complexe à mettre en œuvre, mais elle est plus flexible. Elle permet de construire des morceaux d'arbre de preuve de taille et de forme variable en utilisant les fonctionnalités du langage de programmation telles que les boucles, les expressions conditionnelles, etc.
 
 Reprenons l'exemple précédent. Notre fonction pourrait, par le biais d'une boucle, tester et tant que possible appliquer la tactique $\to E$. Le test prendre place a posteriori, par exemple l'application de la tactique déclenche une erreur si elle n'est pas applicable. Ou a priori, en analysant la formule. Une autre solution, similaire au test a priori, serait d'explorer la formule intelligemment pour compter le nombre de $\to$ et appliquer la tactique $\to E$ ce nombre de fois.
 
-Cette méthode permet de créer des tactiques génériques avec un comportement complexe. C'est pourquoi nous avons retenu cette méthode. Cependant, elle ajoute beaucoup de complexité. Comme élaboré dans l'exemple, elle requiert deux fonctionnalités :
+Cette méthode permet de créer des tactiques génériques avec un comportement complexe. C'est pourquoi nous avons retenu cette méthode. Cependant, elle ajoute beaucoup de complexité. Comme élaboré dans l'exemple, elle requiert les deux fonctionnalités suivantes :
 \begin{enumerate}
-    \item Savoir si une tactique est applicable ou non. En amont de l'application ou dans son résultat.
+    \item Savoir si une tactique est applicable ou non. Soit en testant en amont de l'application, soit en évaluant le résultat qu'elle produit.
     \item Explorer la formule.
 \end{enumerate}
-Nous développons sur ces deux fonctionnalités à la section \ref{DetectionDeclenchement}.
+Nous reporterons notre attention sur ces deux items dans la section \ref{DetectionDeclenchement}.
 
 \subsubsection{Extension du prototype}
-L'exemple utilisé pour illustrer la méthode 2 a servi d'inspiration pour une nouvelle tactique. Cette tactique se compose de deux étapes : réduire une formule en une formule atomique et si la formule à prouver se trouve dans les hypothèses alors appliquer la tactique de l'axiome. La première étape signifie transformer formule constituée d'une chaine d'implications en une formule dépourvue d'implication. Ceci correspond à transformer une formule de la forme $\Gamma \vdash A \to B \to \dots \to C $ vers une formule $\Gamma, A, B, \dots \vdash C$. La seconde étape consiste à vérifier si la formule à prouver se trouve dans les hypothèses. Si c'est le cas, la tactique de l'axiome est appliquée. Sinon rien ne se passe et la main est rendue à l'utilisateur.
-
-Cette tactique combine astucieusement les fonctionnalités du langage de programmation pour créer un comportement complexe. Elle illustre la puissance de la méthode 2 et est un pas en avant vers l'automatisation. Cependant, elle n'est pas parfaite et devons prêter une attention particulière fonctionnalités requises mentionné dans la section \ref{Méthode 2}.
+L'exemple utilisé pour illustrer la seconde méthode a servi d'inspiration pour une nouvelle tactique. Cette tactique, nommée $Auto$, se compose de deux étapes : réduire une formule en une formule atomique et si la formule à prouver se trouve dans les hypothèses alors appliquer la tactique de l'axiome. La première étape signifie transformer formule constituée d'une chaine d'implications en une formule dépourvue d'implication. Ceci correspond à transformer une formule de la forme $\Gamma \vdash A \to B \to \dots \to C $ vers une formule $\Gamma, A, B, \dots \vdash C$. La seconde étape consiste à vérifier si la formule à prouver se trouve dans les hypothèses. Si c'est le cas, la tactique de l'axiome est appliquée. Sinon rien ne se passe et la main est rendue à l'utilisateur.
 
 % TODO : Peut être mentionner quelque part que tactique signifie la fonction qui construit noeud. Et que règle signifie la règle de déduction logique. Pour éviter confusion, car les règles de bases ont toutes une tactique du même nom.
+
+Pour créer ce comportement complexe, cette tactique combine astucieusement les autres tactiques avec les fonctionnalités du langage de programmation. Cette intrication entre le langage et la logique illustre clairement la polyvalence de la seconde méthode. En outre, ceci représente également une avancée significative vers l'automatisation.
 
 \subsection*{Détection et déclenchement automatique (ancienne rédaction)}
 \begin{enumerate}
@@ -285,6 +286,9 @@ Cette tactique combine astucieusement les fonctionnalités du langage de program
 \end{enumerate}
 
 \subsection{Détection et déclenchement automatique} \label{DetectionDeclenchement}
+Idée : séparer détection et déclenchement
+
+déclenchement permet de prendre devant sur l'utilisateur
 \begin{enumerate}
     \item C'est quoi détecter ? (Un peu déjà aborder avant avec les règles dérivées)
     \item But, hypothèse ou les deux.
