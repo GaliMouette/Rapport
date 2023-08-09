@@ -54,8 +54,7 @@ Une preuve formelle est une démonstration construite à l'aide de règles de d�
 La construction d'une preuve formelle est un travail fastidieux et chronophage. En effet, des propositions paraissant évidentes peuvent nécessiter de nombreuses étapes.
 Pour faciliter cette tâche nous pouvons nous pencher sur la question : Pouvons-nous automatiser certaines étapes ? De nombreux travaux ont déjà étés réalisés sur ce sujet. Parmi eux, certains ont pour objectif d'intégrer des solveurs SMT dans des assistants de preuve~\cite{DBLP:conf/cpp/ArmandFGKTW11}.
 
-% TODO : Mettre mettre solveur SMT au singulier
-Un solveur SMT (Satisfiability modulo theories) est un logiciel permettant de résoudre des problèmes de décision. Ils combinent un solveur de formules de la logique propositionnelle (Solveur SAT) à des théories pour permettre de résoudre des formules de la logique du 1\textsuperscript{er} ordre. Parmi les théories les plus utilisés nous trouvons la théorie de l'égalité, la théorie de l'arithmétique linéaire sur les entiers et la théorie de l'arithmétique linéaire sur les réels. Cependant, un solveur SMT reste limité, l'instanciation des quantificateurs est un point faible et la quantité de contraintes fait rapidement croître le temps de résolution.
+Un solveur SMT (Satisfiability modulo theories) est un logiciel permettant de résoudre des problèmes de décision. Il combine un solveur de formule de la logique propositionnelle (Solveur SAT) à des théories pour permettre de résoudre des formules de la logique du 1\textsuperscript{er} ordre. Parmi les théories les plus utilisés nous trouvons la théorie de l'égalité, la théorie de l'arithmétique linéaire sur les entiers et la théorie de l'arithmétique linéaire sur les réels. Cependant, un solveur SMT reste limité, l'instanciation des quantificateurs est un point faible et la quantité de contraintes fait rapidement croître le temps de résolution.
 
 L'assistant de preuve Coq repose sur le calcul des constructions inductives. C'est une logique plus expressive que la logique du 1\textsuperscript{er} ordre. Pour combiner un solveur SMT avec Coq, il est donc nécessaire de pouvoir détecter une formule qui n'est pas de la logique du 1\textsuperscript{er} ordre et essayer de la traiter en amont.
 
@@ -311,9 +310,15 @@ Le deuxième composant utilise le premier. Dans son code, nous utilisons une lis
 
 \section{Conclusion et perspectives}
 \subsection{Notre contribution et nos résultats}
-Faut répéter en isolant important. (Tactiques qui disent si elles s'applique, le langage)
-\subsection{Perspectives}
+Dans cette étude, nous présentons des contributions substantielles dans le domaine du déclenchement et de l'application de tactiques. Nos principales contributions sont les suivantes :
 
+Nous introduisons un nouveau langage spécialement conçu pour le déclenchement automatisé. Ce langage permet la spécification formelle des conditions qui doivent être remplies pour déclencher une action ou une série d'actions. Il est accompagné par un interpréteur permettant de le mettre en application au sein de notre prototype.
+
+Nous abordons le défi de la conception de tactiques en proposant une approche novatrice qui intègre la détection en amont. Notre méthode permet de déterminer si une tactique spécifique est applicable dans un contexte donné. Cela garantit une utilisation plus efficace des tactiques en évitant leur application inutile lorsque les conditions requises ne sont pas réunies.
+
+ous étendons nos contributions en proposant une méthode de composition de tactiques basée sur les résultats obtenus à partir de la détection en amont. En combinant les résultats de plusieurs tactiques, nous facilitons la création d'ensembles de tactiques optimisées pour des scénarios spécifiques. Cette approche de détection en aval garantit que les tactiques sélectionnées sont cohérentes et adaptées à l'objectif final.
+
+\subsection{Perspectives}
 Les contributions de ce stage constituent une fondation solide pour orienter nos futurs travaux de recherche. Dans ce contexte, Louise prévoit d'intégrer ces résultats dans le cadre de sa thèse en les développant davantage. En particulier, elle prévoit d'intégrer un langage pour détecter et déclencher des tactiques dans Sniper, un plugin pour l'assistant de preuve Coq.
 
 Une tâche à venir consiste à se familiariser avec LTac2, à comprendre son fonctionnement et à explorer ses capacités. Cette phase revêt une importance cruciale pour l'évolution de nos recherches, notamment pour l'implémentation future dans Coq. En effet, LTac2 est un langage de programmation dédié à la construction de tactiques dans Coq.
