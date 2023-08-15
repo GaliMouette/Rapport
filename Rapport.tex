@@ -1,9 +1,15 @@
-\documentclass[titlepage]{article}
+\documentclass[french,titlepage]{article}
 
 
 % Le français est une langue magnifique
 \usepackage[T1]{fontenc}
-\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{babel}
+
+% Pour les tactiques
+\usepackage{lmodern}
+\newcommand{\textttbf}[1]{\texttt{\textbf{#1}}}
+
 
 % Pour les bouts de codes jolis
 \usepackage{minted}
