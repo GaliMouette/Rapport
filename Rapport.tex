@@ -3,12 +3,8 @@
 % Le français est une langue magnifique
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[french]{babel}
-% \usepackage{babel}
-
-% Pour les tactiques
+\usepackage{babel}
 \usepackage{lmodern}
-\newcommand{\textttbf}[1]{\texttt{\textbf{#1}}}
 
 % Pour les bouts de codes jolis
 \usepackage{minted}
@@ -51,32 +47,32 @@
 
 \section{Introduction} \label{intro}
 \subsection{Assistant de preuve et preuves formelles} \label{intro:preuves_formelles}
-Dans le domaine de l'informatique et de la logique formelle les avancées technologiques ont engendré de nouvelles perspectives pour la vérification et la validation de systèmes complexes. Parmi ces avancées, les assistants de preuves et les preuves formelles se sont imposés comme des outils fondamentaux pour garantir la correction et la fiabilité de tels systèmes. Avec l'augmentation de la complexité de ces systèmes, l'assurance de leur bon fonctionnement est cruciale et c'est là que les assistants de preuve et les preuves formelles entre en jeu.
+Dans le domaine de l'informatique et de la logique formelle, les avancées technologiques ont engendré de nouvelles perspectives pour la vérification et la validation de systèmes complexes. Parmi ces avancées, les assistants de preuve et les preuves formelles se sont imposés comme des outils fondamentaux pour garantir la correction et la fiabilité de tels systèmes. Avec l'augmentation de la complexité de ces systèmes, l'assurance de leur bon fonctionnement est cruciale et c'est là que les assistants de preuve et les preuves formelles entrent en jeu.
 
-Les assistants de preuves sont des logiciels qui facilitent la création, la vérification et la manipulation de preuves formelles. Parmi les plus connus nous pouvons citer Coq, Isabelle, Agda, Lean, \dots. Leur fonctionnement se base sur l'interaction entre un humain et une machine. L'humain guide la recherche de preuve, en détaillant les étapes de celle-ci, et la machine sauvegarde ces étapes puis s'assure de leur validité.
+Les assistants de preuves sont des logiciels qui facilitent la création, la vérification et la manipulation de preuves formelles. Parmi les plus connus nous pouvons citer Coq, Isabelle, Agda, Lean, \dots Leur fonctionnement se base sur l'interaction entre un humain et une machine. L'humain guide la recherche de preuve, en détaillant les étapes de celle-ci, et la machine sauvegarde ces étapes puis s'assure de leur validité.
 
-Les preuves formelles, d'autre part, sont des démonstrations rigoureuses et systématique de la validité d'une affirmation mathématique ou logique. Ces preuves sont basées sur des règles de déduction formelles et des axiomes bien définis, ce qui garantit un niveau de confiance élevé dans le résultat obtenu.
+Par ailleurs, les preuves formelles sont des démonstrations rigoureuses et systématiques de la validité d'une affirmation mathématique ou logique. Ces preuves sont basées sur des règles de déduction formelles et des axiomes bien définis, ce qui garantit un niveau de confiance élevé dans le résultat obtenu.
 
 \subsection{Un peu d'automatisation} \label{intro:automatisation}
-La construction d'une preuve formelle est un travail fastidieux et chronophage. En effet, des propositions paraissant évidentes peuvent nécessiter de nombreuses étapes. Pour faciliter cette tâche nous pouvons nous pencher sur la question : pouvons-nous automatiser certaines étapes ? De nombreux travaux ont déjà étés réalisés sur ce sujet. Parmi eux, certains ont pour objectif d'intégrer des solveurs SMT dans des assistants de preuve~\cite{DBLP:conf/cpp/ArmandFGKTW11}.
+La construction d'une preuve formelle est un travail fastidieux et chronophage. En effet, prouver certaines propositions paraissant évidentes peut nécessiter de nombreuses étapes. Pour faciliter cette tâche nous pouvons nous pencher sur la question : pouvons-nous automatiser certaines étapes ? De nombreux travaux ont déjà étés réalisés sur ce sujet. Parmi eux, certains ont pour objectif d'intégrer des solveurs SMT dans des assistants de preuve~\cite{DBLP:conf/cpp/ArmandFGKTW11}.
 
-Un solveur SMT (Satisfiability modulo theories) est un logiciel permettant de résoudre des problèmes de décision. Il combine un solveur de la logique propositionnelle (Solveur SAT) à des théories et des quantificateurs pour permettre de résoudre des formules de la logique du 1\textsuperscript{er} ordre. Parmi les théories les plus utilisées nous trouvons la théorie de l'égalité, la théorie de l'arithmétique linéaire sur les entiers et la théorie de l'arithmétique linéaire sur les réels. Cependant, un solveur SMT reste limité, l'instanciation des quantificateurs est un point faible. De plus le problème est intrinséquement difficile donc la quantité de contraintes fait rapidement croître le temps de résolution, mais les solveurs SMT restent parmis les solutions plus efficaces pour le résoudre.
+Un solveur SMT (Satisfiability Modulo Theories) est un logiciel permettant de résoudre des problèmes de décision. Il combine un solveur de la logique propositionnelle (Solveur SAT) à des théories et des quantificateurs pour permettre de résoudre des formules de la logique du 1\ier{} ordre. Parmi les théories les plus utilisées nous trouvons la théorie de l'égalité, la théorie de l'arithmétique linéaire sur les entiers et la théorie de l'arithmétique linéaire sur les réels. Cependant, un solveur SMT reste limité, l'instanciation des quantificateurs est un point faible. De plus, le problème est intrinséquement difficile donc la quantité de contraintes fait rapidement croître le temps de résolution, mais les solveurs SMT restent parmis les solutions plus efficaces pour le résoudre.
 
-L'assistant de preuve Coq repose sur le calcul des constructions inductives. C'est une logique plus expressive que la logique du 1\textsuperscript{er} ordre. Pour combiner un solveur SMT avec Coq, il est donc nécessaire de pouvoir détecter une formule qui n'est pas de la logique du 1\textsuperscript{er} ordre et essayer de la traiter en amont.
+L'assistant de preuve Coq repose sur le calcul des constructions inductives. C'est une logique plus expressive que la logique du 1\ier{} ordre. Pour combiner un solveur SMT avec Coq, il est donc nécessaire de pouvoir détecter une formule qui n'est pas de la logique du 1\ier{} ordre et essayer de la traiter en amont.
 
 % TODO : Peut être plus détailler section suivante
 % TODO : Exemples ?
 
 \subsection{Contexte et objectifs de ce stage} \label{intro:objectifs}
-Les travaux de Louise et Chantal, en collaboration avec Valentin BLOT, s'intéressent déjà à ce sujet~\cite{DBLP:journals/corr/abs-2107-02353,DBLP:conf/cpp/Blot0CPKMV23}. Ils ont déjà implémenté plusieurs tactiques permettant de transformer des formules du calcul des constructions inductives en formules de la logique du 1\textsuperscript{er} ordre. Toutefois l'application de ces tactiques n'est pas toujours possible donc le choix de leur application est laissé à l'utilisateur. Afin d'automatiser ce processus, nous devons détecter les formules sur lesquelles ces tactiques peuvent être appliquées.
+Les travaux de Louise et Chantal, en collaboration avec Valentin BLOT, s'intéressent déjà à ce sujet~\cite{DBLP:journals/corr/abs-2107-02353,DBLP:conf/cpp/Blot0CPKMV23}. Ils ont déjà implémenté plusieurs tactiques permettant de transformer des formules du calcul des constructions inductives en formules de la logique du 1\ier{} ordre. Toutefois l'application de ces tactiques n'est pas toujours possible donc le choix de leur application est laissé à l'utilisateur. Afin d'automatiser ce processus, nous devons détecter les formules sur lesquelles ces tactiques peuvent être appliquées.
 
-Également, l'ordre de ces tactiques n'est pas anodin. Certaines tactiques vont augmenter le nombre de tactiques qu'il est possible d'appliquer ce qui complexifie la recherche de preuve augmentant ainsi la charge de travail de l'utilisateur. Nous prêtons un soin particulier à l'ordre dans lequel les appliquer. Nous avons déjà remarqué pendant nos expériences que certaines tactiques sont souvent appliquées dans le même ordre.
+Également, l'ordre de ces tactiques n'est pas anodin. Certaines tactiques vont augmenter le nombre de tactiques qu'il est possible d'appliquer ce qui complexifie la recherche de preuve augmentant ainsi la charge de travail de l'utilisateur. Nous apportons une attention particulière à l'ordre dans lequel les appliquer. Nous avons déjà remarqué pendant nos expériences que certaines tactiques sont souvent appliquées dans le même ordre.
 
-L'objectif de ce stage est de trouver un moyen de détecter les formules sur lesquelles les tactiques peuvent être appliquées ainsi que de trouver un ordre d'application de ces tactiques.
+L'objectif de ce stage est de trouver un moyen de détecter les formules sur lesquelles les tactiques peuvent être appliquées ainsi que trouver un ordre d'application de ces tactiques.
 
-Ma contribution consiste en un langage de spécification permettant de décrire les conditions d'application d'une tactique. Les descriptions écrites dans ce langage sont ensuite assignées à une priorité et une tactique, puis interprétées. La tactique associée à la description la plus prioritaire dont les conditions sont vérifiées est appliquée.
+Ma contribution consiste en l'élaboration d'un langage de spécification permettant de décrire les conditions d'application d'une tactique. Les descriptions écrites dans ce langage sont ensuite assignées à une priorité et une tactique, puis interprétées. La tactique associée à la description la plus prioritaire dont les conditions sont vérifiées est appliquée.
 
-Ce rapport est organisé comme suit. Dans la partie suivante, nous présentons l'environnement de travail. Par la suite, la partie \ref{realisation} présente les réalisations de ce stage en commençant par les nouvelles tactiques implémentées, puis en présentant la composition de tactiques, ensuite en détaillant la détection et le déclenchement automatique et enfin en présentant un langage de spécification. Nous concluons et présentons les perspectives de ce stage dans la partie \ref{conclusion}.
+Ce rapport est organisé comme suit. Dans la prochaine partie, nous présentons l'environnement de travail. Par la suite, la partie~\ref{realisation} présente les réalisations de ce stage en commençant par les nouvelles tactiques implémentées, puis en présentant la composition de tactiques, ensuite en détaillant la détection et le déclenchement automatique et enfin en présentant un langage de spécification. Nous concluons et présentons les perspectives de ce stage dans la partie~\ref{conclusion}.
 
 
 
@@ -90,9 +86,9 @@ Le prototype se décompose en deux parties : un module interagissant avec l'util
 L'application d'une tactique à la formule courante produit
 un nœud contenant la tactique appliquée, ainsi que les sous-buts générés restant à prouver qui sont modélisés par des trous. Ce nœud remplace ensuite le trou correspondant dans l'arbre de preuve. Quand l'arbre de preuve ne contient plus de trou, la preuve est terminée. Une fois terminée, le noyau s'assure de la validité de l'arbre de preuve nouvellement construit.
 
-La vérification de l'arbre de preuve est une étape cruciale, car une erreur logique dans celle-ci permettrait de prouver n'importe quelle formule. Ajouter du code au noyau est une tâche délicate et risque d'introduire des comportements inattendus. S'assurer que les changements apportés n'ont pas d'impacts indésirés est laborieux. C'est pourquoi le noyau est séparé du module d'interaction avec l'utilisateur. Cela permet de minimiser la quantité de code le composant et de réduire la confiance que nous devons lui accorder.
+La vérification de l'arbre de preuve est une étape cruciale, car une erreur logique dans celle-ci permettrait de prouver n'importe quelle formule. Ajouter du code au noyau est une tâche délicate et risque d'introduire des comportements inattendus. S'assurer que les changements apportés n'ont pas d'impacts indésirés est laborieux. C'est pourquoi le noyau est séparé du module d'interaction avec l'utilisateur. Cela permet de minimiser la quantité de code composant le noyau et de réduire la confiance que nous devons lui accorder.
 
-Dans ce rapport quand nous parlons de tactique, nous parlons de la fonction qui construit le nœud correspondant. Et quand nous parlons de règle, nous parlons de la règle de déduction logique. Par exemple, la tactique $\to_E$ construit le nœud correspondant à la règle $\to_E$ définie ci-dessous :
+Dans ce rapport, quand nous parlons de tactique, nous parlons de la fonction qui construit le nœud correspondant. Et quand nous parlons de règle, nous parlons de la règle de déduction logique. Par exemple, la tactique $\to_E$ construit le nœud correspondant à la règle $\to_E$ définie ci-dessous :
 \begin{mathpar}
     \inferrule* [Right=($\to_E$)] {
         \Gamma \vdash A \to B
@@ -108,9 +104,9 @@ Dans ce rapport quand nous parlons de tactique, nous parlons de la fonction qui 
 
 \section{Réalisation} \label{realisation}
 \subsection{De nouvelles tactiques} \label{realisation:nouvelles_tactiques}
-L'automatisation de la construction de preuve se fait par l'utilisation de tactiques. C'est le seul médium permettant d'interagir avec l'assistant de preuve. Cette automatisation peut avoir un comportement très simple, comme une tactique combinant une application successive de tactiques au style d'un raccourci, ou bien légèrement plus complexe, comme une tactique cherchant à appliquer une autre tant que possible, ou encore très complexe, comme une tactique utilisant un logiciel externe de la même façon qu'une tactique de résolution faisant appel à un solveur SMT.
+L'automatisation de la construction de preuve se fait par l'utilisation de tactiques. C'est le seul médium permettant d'interagir avec l'assistant de preuve. Cette automatisation peut avoir un comportement très simple, comme une tactique correspondant à une application successive de tactiques, à l'apparence d'un raccourci. Ou bien un comportement légèrement plus complexe, comme une tactique cherchant à appliquer une autre tant que possible, ou encore très complexe, comme une tactique utilisant un logiciel externe de la même façon qu'une tactique de résolution faisant appel à un solveur SMT.
 
-Dans cette sous-section nous présentons un exemple de tactique avec un comportement simple dont nous détaillons les spécifications techniques et l'implémentation. Nous présenterons également un exemple de tactique avec un comportement plus complexe dans la section \ref{realisation:composition_tactiques}.
+Dans cette partie nous présentons un exemple de tactique avec un comportement simple dont nous détaillons les spécifications techniques et l'implémentation. Nous présenterons également un exemple de tactique avec un comportement plus complexe dans la section~\ref{realisation:composition_tactiques}.
 
 \subsubsection{Spécifications techniques} \label{realisation:nouvelles_tactiques:specs}
 Les nouvelles tactiques implémentées sont les suivantes : $\land_{E_L}$ et $\land_{E_R}$. Elles implémentent les règles suivantes :
@@ -165,20 +161,20 @@ Et les règles utilisées pour les dériver sont les suivantes :
         \Gamma, A \vdash A
     }
 \end{mathpar}
-Ces arbres de preuves affichent clairement pourquoi ces tactiques simplifient la construction de preuve. Au lieu d'appliquer la règle $\land_E$ puis la règle \textttbf{Axiom}, nous pouvons directement appliquer la règle $\land E_L$ ou $\land E_R$. Cela permet de générer moins de sous-buts. La recherche est plus courte. L'ajout de ces tactiques ne change pas la logique sous-jacente puisqu'il était déjà possible d'appliquer manuellement les deux tactiques. C'est un premier pas vers l'automatisation de la construction de preuve.
+Ces arbres de preuves affichent clairement pourquoi ces tactiques simplifient la construction de preuve. Au lieu d'appliquer la règle $\land_E$ puis la règle $Axiom$, nous pouvons directement appliquer la règle $\land E_L$ ou $\land E_R$. Cela permet de générer moins de sous-buts. La recherche est plus courte. L'ajout de ces tactiques ne change pas la logique sous-jacente puisqu'il était déjà possible d'appliquer manuellement les deux tactiques. C'est un premier pas vers l'automatisation de la construction de preuve.
 
 \subsubsection{Implémentation} \label{realisation:nouvelles_tactiques:implémentation}
 Nous avons choisi pour implémenter chaque nouvelle tactique de créer une fonction dédiée. Celle-ci s'occupe de la création du morceau de l'arbre de preuve. Sa conception peut se faire de deux façons :
 \begin{enumerate}
-    \item Introduire un nouveau type de nœud dans l'arbre de preuve. Cependant, pour chaque nouveau type de nœud cette méthode implique de rajouter du code au noyau pour le vérifier. Cela va à l'encontre de la séparation entre le noyau et les tactiques mentionnée dans la section \ref{env_travail:fonctionnement_proto}. Cette méthode n'est donc pas recommandée et ne sera pas utilisée.
-    \item Utiliser les arbres de preuves des dérivations décrites dans la section \ref{realisation:nouvelles_tactiques:specs}. Les types des nœuds nécessaires pour créer un tel arbre sont déjà présents dans le noyau et leur vérification est déjà implémentée. Cette méthode ne nécessite pas de rajouter du code au noyau. C'est donc celle que nous avons choisie. Cependant, un arbre produit par cette méthode est plus grand qu'un arbre produit par la méthode précédente. Il contient plus de nœuds et donc le temps nécessaire pour le vérifier est plus long.
+    \item Introduire un nouveau type de nœud dans l'arbre de preuve. Cependant, pour chaque nouveau type de nœud, cette méthode implique de rajouter du code au noyau pour le vérifier. Cela va à l'encontre de la séparation entre le noyau et les tactiques, mentionnée dans la section~\ref{env_travail:fonctionnement_proto}. Cette méthode n'est donc pas recommandée et ne sera pas utilisée.
+    \item Utiliser les arbres de preuves des dérivations décrites dans la section~\ref{realisation:nouvelles_tactiques:specs}. Les types des nœuds nécessaires pour créer un tel arbre sont déjà présents dans le noyau et leur vérification est déjà implémentée. Cette méthode ne nécessite pas de rajouter du code au noyau. C'est donc celle que nous avons choisie. Cependant, un arbre produit par cette méthode est plus grand qu'un arbre produit par la méthode précédente. Il contient plus de nœuds et donc le temps nécessaire pour le vérifier est plus long.
 \end{enumerate}
 
-Pour implémenter la méthode que nous avons retenue, nous avons besoin de créer un morceau d'arbre de preuve. La conception de ce morceau peut se faire, soit en composant les types de nœuds de l'arbre, soit en composant les fonctions existantes. Nous abordons ces points prochainement, dans la section \ref{realisation:composition_tactiques}, où nous présentons également un exemple de tactique avec un comportement plus complexe.
+Pour implémenter la méthode que nous avons retenue, nous avons besoin de créer un morceau d'arbre de preuve. La conception de ce morceau peut se faire, soit en composant les types de nœuds de l'arbre, soit en composant les fonctions existantes. Nous abordons ces points prochainement, dans la section~\ref{realisation:composition_tactiques}, où nous présentons également un exemple de tactique avec un comportement plus complexe.
 
 \subsection{Composition de tactiques} \label{realisation:composition_tactiques}
 Dans la méthode retenue, la fonction crée un morceau d'arbre de preuve.
-Nous commençons par présenter deux façons de concevoir ce morceau. Ensuite présentons une tactique ajoutée au prototype, illustrant la composition de tactiques.
+Nous commençons par présenter deux façons de concevoir ce morceau. Ensuite, nous présentons une tactique ajoutée au prototype, illustrant la composition de tactiques.
 
 \subsubsection{Première méthode} \label{realisation:composition_tactiques:premiere_methode}
 Cette méthode constiste à, dans la fonction, construire directement le morceau en utilisant les types de nœuds. Cette méthode est simple à mettre en œuvre, mais elle est peu flexible. Par exemple, supposons un raccourci appliquant deux fois la tactique $\to_I$. Voici l'arbre correspondant à ce raccourci, ainsi que la définition de la règle $\to_I$ :
@@ -207,24 +203,28 @@ Le problème est que cette méthode requiert de connaitre la taille et la forme 
 \subsubsection{Seconde méthode} \label{realisation:composition_tactiques:seconde_methode}
 Cette méthode consiste à faire successivement appel à chacune des fonctions, déjà existantes, qui construisent les nœuds composant l'arbre. Cela est plus complexe à mettre en œuvre, mais est plus flexible. Une telle approche permet de construire des morceaux d'arbre de preuve de taille et de forme variable en utilisant les fonctionnalités du langage de programmation telles que les boucles, les expressions conditionnelles, \dots.
 
-Reprenons l'exemple précédent. Notre fonction pourrait, par le biais d'une boucle, tester et tant que possible d'appliquer la tactique $\to_I$. Nous avons deux possibilités pour tester l'applicabilité d'une tactique. En testant en aval. Par exemple la fonction renvoie une erreur si elle ne peut pas s'appliquer. Ou bien en testant en amont en analysant la formule. Une autre solution, similaire au test en amont, serait d'explorer la formule intelligemment pour compter le nombre de $\to$ et appliquer la tactique $\to_I$ ce nombre de fois.
+Reprenons l'exemple précédent. Notre fonction pourrait, par le biais d'une boucle, tester et tant que possible appliquer la tactique $\to_I$. Nous avons deux possibilités pour tester l'applicabilité d'une tactique :
+\begin{itemize}
+    \item En testant en aval. Par exemple la fonction renvoie une erreur si elle ne peut pas s'appliquer.
+    \item Ou bien en testant en amont en analysant la formule. Cela pourrait consister à explorer la formule intelligemment pour compter le nombre de $\to$ et appliquer la tactique $\to_I$ ce nombre de fois.
+\end{itemize}
 
 
-Cette méthode permet de créer des tactiques génériques avec un comportement complexe. C'est pourquoi nous l'avons retenue. Cependant, elle ajoute beaucoup de complexité. Comme élaboré dans l'exemple, elle requiert les deux fonctionnalités suivantes :
-\begin{enumerate}
+Cette méthode faisant appel aux tactiques déjà existantes permet de créer des tactiques génériques avec un comportement complexe. C'est pourquoi nous l'avons retenue. Cependant, elle ajoute beaucoup de complexité. Comme élaboré dans l'exemple, elle requiert les deux fonctionnalités suivantes :
+\begin{itemize}
     \item Savoir si une tactique est applicable ou non, soit en testant en amont de l'application, soit en évaluant le résultat qu'elle produit.
     \item Explorer la formule.
-\end{enumerate}
-Ces fonctionnalités sont misent à l'œuvre dans la tactique \textttbf{Auto} présentée dans le paragraphe suivant. Il n'est nécessaire de comprendre ni leur fonctionnement interne, ni leur implémentation. Il suffit de comprendre leur rôle. Les détails concernant leur fonctionnement et leur mise en œuvre seront abordés à la section \ref{realisation:detection_declenchement}.
+\end{itemize}
+Ces fonctionnalités sont misent à l'œuvre dans la tactique $Auto$ présentée dans le paragraphe suivant. Il n'est nécessaire de comprendre ni leur fonctionnement interne, ni leur implémentation. Il suffit de comprendre leur rôle. Les détails concernant leur fonctionnement et leur mise en œuvre seront abordés à la section~\ref{realisation:detection_declenchement}.
 
 \subsubsection{Extension du prototype} \label{realisation:composition_tactiques:extension_proto}
-L'exemple utilisé pour illustrer la seconde méthode a servi d'inspiration pour une nouvelle tactique. Cette tactique, nommée \textttbf{Auto}, se compose de deux étapes : réduire une formule en une formule atomique, et si la formule à prouver se trouve dans les hypothèses alors appliquer la tactique de l'axiome. La première étape signifie transformer une formule constituée d'une chaîne d'implications en une formule dépourvue d'implication. Ceci correspond à transformer une formule de la forme $\Gamma \vdash A \to B \to \dots \to C $ vers une formule $\Gamma, A, B, \dots \vdash C$. La seconde étape consiste à vérifier si la formule à prouver se trouve dans les hypothèses. Si c'est le cas, la tactique de l'axiome est appliquée. Sinon rien ne se passe et la main est rendue à l'utilisateur.
+L'exemple utilisé pour illustrer la seconde méthode a servi d'inspiration pour une nouvelle tactique. Cette tactique, nommée $Auto$, se compose de deux étapes : réduire une formule en une formule atomique, et si la formule à prouver se trouve dans les hypothèses alors appliquer la tactique de l'axiome. La première étape signifie transformer une formule constituée d'une chaîne d'implications en une formule dépourvue d'implication. Ceci correspond à transformer une formule de la forme $\Gamma \vdash A \to B \to \dots \to C $ vers une formule $\Gamma, A, B, \dots \vdash C$. La seconde étape consiste à vérifier si la formule à prouver se trouve dans les hypothèses. Si c'est le cas, la tactique de l'axiome est appliquée. Sinon rien ne se passe et la main est rendue à l'utilisateur.
 
-Pour créer ce comportement complexe, cette tactique combine astucieusement les autres tactiques avec les fonctionnalités du langage de programmation. Notre première implémentation se basait sur une fonction récursive auxiliaire avec un test pour déterminer l'applicabilité. L'implémentation actuelle utilise les concepts que nous présenterons dans la partie \ref{realisation:langage_detecter}. Cette intrication entre le langage et la logique illustre clairement la polyvalence de la seconde méthode. En outre, ceci représente également une avancée significative vers l'automatisation.
+Pour créer ce comportement complexe, cette tactique combine astucieusement les autres tactiques avec les fonctionnalités du langage de programmation. Notre première implémentation se basait sur une fonction récursive auxiliaire avec un test pour déterminer l'applicabilité. L'implémentation actuelle utilise les concepts que nous présenterons dans la partie~\ref{realisation:langage_detecter}. Cette intrication entre le langage et la logique illustre clairement la polyvalence de la seconde méthode. En outre, ceci représente également une avancée significative vers l'automatisation.
 
 \subsection{Détection et déclenchement automatique} \label{realisation:detection_declenchement}
 \subsubsection{Détection} \label{realisation:detection_declenchement:detection}
-Nous mentionnons dans la partie \ref{realisation:composition_tactiques:seconde_methode} que nous avons besoin de savoir si une tactique est applicable et de pouvoir explorer une formule. Ces exigences servent toutes les deux à récolter de l'information. Une fois cette information obtenue nous pouvons prendre des décisions en conséquence. La prise de décision sera abordée dans la section suivante.
+Nous mentionnons dans la partie~\ref{realisation:composition_tactiques:seconde_methode} que nous avons besoin de savoir si une tactique est applicable et de pouvoir explorer une formule. Ces exigences servent toutes les deux à récolter de l'information. Une fois cette information obtenue nous pouvons prendre des décisions en conséquence. La prise de décision sera abordée dans la section suivante.
 
 Jusqu'à maintenant nous nous sommes concentrés sur la formule, mais cela est restrictif. Par exemple pour la tactique de l'axiome, nous devons regarder si la formule à prouver se trouve dans les hypothèses. Nous devons donc être en mesure de regarder les hypothèses pour obtenir l'ensemble des informations nécessaires. Mais plus encore, dans ce cas précis, nous devons avoir la capacité de regarder les deux simultanément.
 
@@ -235,21 +235,21 @@ Du point de vue d'une tactique, détecter en amont signifie que nous regardons l
 
 Ce type de détection est le plus souvent utilisé au sein même d'une tactique. Par exemple, la tactique $\to_I$ ne peut être appliquée que si la formule est une implication. Et si cette même tactique ne vérifiait pas ce prérequis, alors elle pourrait être appliquée à n'importe quelle formule. Une incohérence de la sorte produira une erreur quand le noyau vérifiera l'arbre de preuve. Mais il est préférable de détecter en amont pour éviter de perdre du temps à construire une preuve qui sera rejetée par le noyau.
 
-La détection en amont peut également permettre de produire de l'information pour la détection en aval. C'est notamment le cas pour notre tactique \textttbf{Auto}. Nous détaillons ce point dans le paragraphe suivant.
+La détection en amont peut également permettre de produire de l'information pour la détection en aval. C'est notamment le cas pour notre tactique $Auto$. Nous détaillons ce point dans le paragraphe suivant.
 
 \paragraph{La détection en aval} \label{realisation:detection_declenchement:detection:aval}
 Comme nous l'avons mentionné dans le paragraphe précédent, le noyau est une sorte de détection en aval. Il vérifie une fois la preuve construite si elle est correcte, c'est-à-dire si les règles logiques sont correctement utilisées. Mais ici, du point de vue d'une tactique, nous ne pouvons pas utiliser le noyau. Car l'arbre de preuve contient encore des trous. Nous devons donc trouver une autre soluction.
 
-Le principal aspect de la détection en aval consiste à regarder si une tactique a réussi à s'appliquer. Nous avons ici une communication entre la détection en amont et en aval. La détection en amont nous permettant de ne pas perdre de temps à appliquer une tactique qui ne peut pas s'appliquer ainsi que transmettre cette information et la détection en aval analysant cette information pour prendre une décision. C'est un point important, car cela facilite grandement la composition de tactiques.
+Le principal aspect de la détection en aval consiste à regarder si une tactique a réussi à s'appliquer. Nous avons ici une communication entre la détection en amont et en aval. La détection en amont nous permet de ne pas perdre de temps à appliquer une tactique inaplicable et de transmettre cette information. Par la suite, la détection en aval analyse cette information pour prendre une décision. C'est un point important, car cela facilite grandement la composition de tactiques.
 
-C'est le cas de notre tactique \textttbf{Auto} par exemple. Au lieu de regarder en boucle si la formule est une implication, nous pouvons maintenant utiliser le résultat produit par la tactique $\to_I$. C'est-à-dire que si la tactique $\to_I$ a réussi à s'appliquer, alors nous savons que la formule était une implication et nous récupérons le résultat après l'application de $\to_I$. Et si la tactique $\to_I$ n'a pas réussi à s'appliquer, alors nous savons que la formule n'est pas une implication.
+C'est le cas de notre tactique $Auto$ par exemple. Au lieu de regarder en boucle si la formule est une implication, nous pouvons maintenant utiliser le résultat produit par la tactique $\to_I$. C'est-à-dire que si la tactique $\to_I$ a réussi à s'appliquer, alors nous savons que la formule était une implication et nous récupérons le résultat après l'application de $\to_I$. Et si la tactique $\to_I$ n'a pas réussi à s'appliquer, alors nous savons que la formule n'est pas une implication.
 
 \subsubsection{Déclenchement} \label{realisation:detection_declenchement:declenchement}
 Dans les paragraphes précédents, nous avons mentionné que la détection permet de récolter de l'information pour par la suite prendre des décisions. Les exemples que nous avons présentés implémentent des procédures qui utilisent ces détections pour prendre des décisions et ainsi adapter leurs comportements. Mais ces procédures ne sont pas automatiques. Nous avons toujours besoin de l'utilisateur pour déclencher la tactique.
 
 Cependant, nous pouvons aller plus loin. Nous pouvons nous placer dans le cadre de l'interaction avec l'utilisateur. Par exemple, après que l'utilisateur a appliqué une tactique, nous pouvons détecter si parmi une liste une autre tactique peut s'appliquer et le cas échéant l'appliquer automatiquement. Ici nous obtenons un comportement complètement automatique dans lequel l'assistant de preuve vient en aide à l'utilisateur.
 
-Il est important prendre en compte l'ordre des tactiques dans notre détection. Les tactiques produisant plusieurs sous-formules doivent être soigneusement placées. Par exemple, la tactique implémentant l'élimination la disjonction produit trois sous-formules. Si nous la plaçons avant la tactique de l'axiome, nous pouvons nous retrouver dans une situation où au lieu de terminer la preuve de la formule, nous nous retrouvons avec trois sous-formules à prouver. En plus de cela, l'élimination de la disjonction est une des tactiques qui peut s'appliquer à n'importe quelle formule. Ainsi en la plaçant en premier, la preuve risque de ne pas se terminer. L'intuition est que nous devons placer les tactiques les plus spécifiques en premier et les plus générales en dernier.
+Pour ce faire, il est important prendre en compte l'ordre des tactiques dans notre détection. Les tactiques produisant plusieurs sous-formules doivent être soigneusement placées. Par exemple, la tactique implémentant l'élimination de la disjonction produit trois sous-formules. Si nous la plaçons avant la tactique de l'axiome, nous pouvons nous retrouver dans une situation où au lieu de terminer la preuve de la formule, nous nous retrouvons avec trois sous-formules à prouver. En plus de cela, l'élimination de la disjonction est une des tactiques qui peut s'appliquer à n'importe quelle formule. Ainsi en la plaçant en premier, la preuve risque de ne pas se terminer. L'intuition est que nous devons placer les tactiques les plus spécifiques en premier et les plus générales en dernier.
 
 \subsubsection{Détails d'implémentation} \label{realisation:detection_declenchement:details_implementation}
 Dans notre prototype, nous implémentons les deux types de détections mentionnés précédemment ainsi que le déclenchement automatique.
@@ -260,14 +260,13 @@ Maintenant que les tactiques de bases implémentent la détection en amont, les 
 \begin{itemize}
     \item \mintinline{ocaml}|fold_apply_once| : reçoit une liste de tactiques puis les applique une par une sans se soucier d'un éventuel échec.
     \item \mintinline{ocaml}|fold_apply| : fonctionne comme \mintinline{ocaml}|fold_apply_once|, mais pour chaque tactique l'applique tant que possible.
-    \item \mintinline{ocaml}|try_apply| : permet de ne pas appliquer une tactique si le sous-arbre de preuve ne présente plus de trou. Lorsque nous avons réimplémenté la tactique \textttbf{Auto} en utilisant les fonctions ci-dessus, nous avons remarqué un problème. Si une des tactiques sous-jacentes à \textttbf{Auto} réussi en terminant la preuve alors \mintinline{ocaml}|fold_apply| continue de l'appliquer. Cela produit une erreur. C'est pourquoi nous avons ajouté la fonction \mintinline{ocaml}|try_apply|. Ainsi, elle est utilisée dans les deux fonctions ci-dessus pour leur permettre de s'arrêter.
+    \item \mintinline{ocaml}|try_apply| : permet de ne pas appliquer une tactique si le sous-arbre de preuve ne présente plus de trou. Lorsque nous avons réimplémenté la tactique $Auto$ en utilisant les fonctions ci-dessus, nous avons remarqué un problème. Si une des tactiques sous-jacentes à $Auto$ réussi en terminant la preuve alors \mintinline{ocaml}|fold_apply| continue de l'appliquer. Cela produit une erreur. C'est pourquoi nous avons ajouté la fonction \mintinline{ocaml}|try_apply|. Ainsi, elle est utilisée dans les deux fonctions ci-dessus pour leur permettre de s'arrêter.
 \end{itemize}
-Avec ces fonctions, notre tactique \textttbf{Auto} se résume à une liste contenant la tactique $\to_I$ et la tactique \textttbf{Axiom} que nous appliquons avec \mintinline{ocaml}|fold_apply|. Nous avons également implémenté la tactique \textttbf{Commute} combinant les deux types de détection. Cette tactique permet de commuter les connecteurs $\land$ et $\lor$. C'est-à-dire transformer une formule de la forme $A \land B$ en $B \land A$ et une formule de la forme $A \lor B$ en $B \lor A$. \textttbf{Commute} commence par détection en amont si la formule est une conjonction ou une disjonction. Si c'est le cas, alors nous construisons les arbres respectifs avec l'aide des fonctions mention ci-dessus.
+Avec ces fonctions, notre tactique $Auto$ se résume à une liste contenant la tactique $\to_I$ et la tactique $Axiom$ que nous appliquons avec \mintinline{ocaml}|fold_apply|. Nous avons également implémenté la tactique $Commute$ combinant les deux types de détection. Cette tactique permet de commuter les connecteurs $\land$ et $\lor$, c'est-à-dire transformer une formule de la forme $A \land B$ en $B \land A$ et une formule de la forme $A \lor B$ en $B \lor A$. $Commute$ commence par détecter en amont si la formule est une conjonction ou une disjonction. Si c'est le cas, alors nous construisons les arbres respectifs avec l'aide des fonctions mentionnées ci-dessus.
 
-Dans le cadre des tactiques de base et des tactiques les combinant, la principale utilisation de la détection est de simplifier l'implémentation notamment en évitant de répéter plusieurs fois la même détection. Par exemple, la tactique $\to_I$ doit indépendamment vérifier que la formule est une implication, et si la détection en aval n'était pas utilisée, alors la tactique \textttbf{Auto} devrait également le vérifier avant d'appliquer $\to_I$.
+Dans le cadre des tactiques de base et des tactiques les combinant, la principale utilisation de la détection est de simplifier l'implémentation notamment en évitant de répéter plusieurs fois la même détection. Par exemple, la tactique $\to_I$ doit indépendamment vérifier que la formule est une implication, et si la détection en aval n'était pas utilisée, alors la tactique $Auto$ devrait également le vérifier avant d'appliquer $\to_I$.
 
-Le déclenchement automatique de tactiques comme \textttbf{Axiom} ou \textttbf{Auto} reste simple. En effet, l'assistant peut simplement les appeler après une interaction avec l'utilisateur. Leurs impacts sont minimes et n'augmentent pas le nombre de sous-formules à prouver. Jusqu'à maintenant les formes que nous avions besoin de détecter étaient simples. La plupart du temps, il s'agissait de regarder le connecteur de la formule.
-Mais parfois, nous avons besoin de détecter des formes plus complexes et cela peut devenir difficile.
+Le déclenchement automatique de tactiques comme $Axiom$ ou $Auto$ reste simple. En effet, l'assistant peut simplement les appeler après une interaction avec l'utilisateur. Leurs impacts sont minimes et n'augmentent pas le nombre de sous-formules à prouver. Jusqu'à maintenant les formes que nous avions besoin de détecter étaient simples. La plupart du temps, il s'agissait de regarder le connecteur de la formule. Mais parfois, nous avons besoin de détecter des formes plus complexes et cela peut devenir difficile.
 
 Par exemple, prenons la tactique $\lor_E$. Celle-ci implémente la règle suivante :
 \begin{mathpar}
@@ -281,13 +280,13 @@ Par exemple, prenons la tactique $\lor_E$. Celle-ci implémente la règle suivan
         \Gamma \vdash C
     }
 \end{mathpar}
-Cette tactique peut toujours s'appliquer, mais nous devons être vigilants. Il n'y a aucun intérêt à l'utiliser si dans nos hypothèses nous n'avons pas une formule avec une conjonction. Dans cet exemple, nous nécessitons d'exprimer plus que la forme d'une formule. Nous abordons ce problème et notre solution dans la section suivante.
+Cette tactique peut toujours s'appliquer, mais nous devons être vigilants. Il n'y a aucun intérêt à l'utiliser si dans nos hypothèses nous n'avons pas une formule avec une conjonction. Dans cet exemple, nous devons exprimer plus que la forme d'une formule. Nous abordons ce problème et notre solution dans la partie suivante.
 
 \subsection{Un langage pour détecter} \label{realisation:langage_detecter}
-Dans la section précédente, nous introduisons brièvement le problème suivant. Le système de détection actuel est suffisant pour les tactiques, mais trop peu expressif pour le déclenchement automatique. Nous avons besoin d'exprimer plus que la forme d'une formule. Nous avons besoin d'exprimer sa position. Par exemple, nous voulons pouvoir exprimer que la formule est une hypothèse ou qu'elle est dans la conclusion, le tout en conservant les fonctionnalités du système actuel.
+Dans la partie précédente, nous introduisons brièvement le problème suivant. Le système de détection actuel est suffisant pour les tactiques, mais trop peu expressif pour le déclenchement automatique. Nous avons besoin d'exprimer plus que la forme d'une formule. Nous avons besoin d'exprimer sa position. Par exemple, nous voulons pouvoir exprimer que la formule est une hypothèse ou bien qu'elle est dans la conclusion, le tout en conservant les fonctionnalités du système actuel.
 
 \subsubsection{Syntaxe} \label{realisation:langage_detecter:syntaxe}
-Notre solution consiste à créer un langage de détection et déclenchement. Nous utilisons les types d'OCaml pour définir la syntaxe suivante :
+Notre solution consiste à créer un langage pour la détection et le déclenchement. Nous utilisons les types d'OCaml pour définir la syntaxe suivante :
 \begin{minted}{ocaml}
 type trigger_var = TGoal | TSomeHyp
 
@@ -317,7 +316,7 @@ Le type \mintinline{ocaml}|trigger| permet de définir une détection. \mintinli
 \begin{itemize}
     \item \mintinline{ocaml}|TIs (TGoal, TVar "A")| : vérifie si la conclusion est la variable $A$.
     \item \mintinline{ocaml}|TContains (TSomeHyp, TVar "A")| : vérifie si une hypothèse quelconque contient la variable $A$.
-    \item \mintinline{ocaml}|TEq (TGoal, TSomeHyp)| : vérifie si la conclusion est une hypothèse quelconque. C'est le déclencheur pour la tactique \textttbf{Axiom}.
+    \item \mintinline{ocaml}|TEq (TGoal, TSomeHyp)| : vérifie si la conclusion est une hypothèse quelconque. C'est le déclencheur pour la tactique $Axiom$.
     \item \mintinline{ocaml}|TIs (TGoal, TAnd(TDiscard, TDiscard))| :
           vérifie si la conclusion est une conjonction. C'est le déclencheur
           pour la tactique $\land_I$ qui implémente la règle suivante :
@@ -339,25 +338,25 @@ Le langage que nous avons présenté précédemment permet de définir des décl
 Une variable de déclenchement prend une valeur lors de l'interprétation. Il en existe deux : \mintinline{ocaml}|TGoal| et \mintinline{ocaml}|TSomeHyp|. Lors de l'interprétation \mintinline{ocaml}|TGoal| prend la valeur du but courant et \mintinline{ocaml}|TSomeHyp| donne accès à la liste des hypothèses. Utiliser une liste contenant toutes les hypothèses permet d'émuler le comportement : est-ce qu'il existe une hypothèse qui vérifie la condition ? Pour cela, il suffit de prendre un à un les éléments de la liste et le premier qui vérifie la condition est retourné. Si aucun élément ne vérifie la condition, alors la détection échoue.
 
 \paragraph{Formes} \label{realisation:langage_detecter:interpretation:formes}
-L'interprétation de la forme est similaire à celle utilisée dans les tactiques. Dans les tactiques, nous utilisons des disjonctions de cas, ce qui nécessite de dupliquer une partie du code pour chaque cas. Ici, grace au type \mintinline{ocaml}|trigger_form|, nous implémentons un système générique. La fonction d'interprétation prend en paramètre une formule et une forme et retourne, soit un échec, soit une liste de formules. C'est dans l'élaboration de cette liste qu'interviennent les constructeurs \mintinline{ocaml}|TMetaVar| et \mintinline{ocaml}|TDiscard|.
+L'interprétation de la forme est similaire à celle utilisée dans les tactiques. Dans les tactiques, nous utilisons des disjonctions de cas, ce qui nécessite de dupliquer une partie du code pour chaque cas. Ici, grâce au type \mintinline{ocaml}|trigger_form|, nous implémentons un système générique. La fonction d'interprétation prend en paramètre une formule et une forme et retourne, soit un échec, soit une liste de formules. C'est dans l'élaboration de cette liste qu'interviennent les constructeurs \mintinline{ocaml}|TMetaVar| et \mintinline{ocaml}|TDiscard|.
 
 Par exemple, avec la forme \mintinline{ocaml}|TAnd(TMetaVar, TDiscard)| interprété sur la formule $A \land B$, la fonction retournera la liste $[A]$. En effet, \mintinline{ocaml}|TMetaVar| est remplacé par $A$ et \mintinline{ocaml}|TDiscard| est ignoré.
 
-Il est important de noter la différence entre \mintinline{ocaml}|TMetaVar| et \mintinline{ocaml}|TVar|. \mintinline{ocaml}|TMetaVar| est utilisé lors de l'interprétation pour récupérer des morceaux de formules. \mintinline{ocaml}|TVar| quant à elle est utilisée lors de la vérification de la forme. Par exemple, avec la forme \mintinline{ocaml}|TAnd(TVar "A", TDiscard)| interprété sur la formule $B \land C$, la fonction retournera un échec. En effet, la variable utilisé dans la formule est $B$ et non $A$.
+Il est important de noter la différence entre \mintinline{ocaml}|TMetaVar| et \mintinline{ocaml}|TVar|. \mintinline{ocaml}|TMetaVar| est utilisé lors de l'interprétation pour récupérer des morceaux de formules. \mintinline{ocaml}|TVar| quant à elle est utilisée lors de la vérification de la forme. Par exemple, avec la forme \mintinline{ocaml}|TAnd(TVar "A", TDiscard)| interprété sur la formule $B \land C$, la fonction retournera un échec. En effet, la variable utilisée dans la formule est $B$ et non $A$.
 
 \paragraph{Déclencheurs} \label{realisation:langage_detecter:interpretation:declencheurs}
 L'interprétation du déclencheur est constituée de deux composants. Le premier est l'interprétation des constructeurs \mintinline{ocaml}|TEq|, \mintinline{ocaml}|TIs| et \mintinline{ocaml}|TContains|. Il utilise la fonction pour interpréter la forme pour obtenir une liste de formules. Ensuite, il vérifie si la liste est vide ou non. Si elle est vide, alors la détection échoue. Sinon, il retourne la liste des formules obtenues.
 
-Le deuxième composant utilise le premier. Dans son code, nous utilisons une liste de couples associant déclencheurs et tactiques. Pour chaque couple, nous interprétons le déclencheur et s'il réussit, nous appliquons la tactique. Ici nous utilisons implicitement l'ordre que nous mentionnons à la section \ref{realisation:detection_declenchement:declenchement}. Par exemple, pour l'élimination de la disjonction ($\lor E$), nous pouvons utiliser le déclencheur \mintinline{ocaml}|TIs (TSomeHyp, (TOr, TMetaVar, TMetaVar))|. Cependant, un problème auquel nous faisons face est que le déclencheur peut s'appliquer plusieurs fois. En effet, à moins de supprimer l'hypothèse, la condition restera vérifiée. Pour éviter cela, nous utilisons une liste de déclencheurs ainsi que la formule associée à leur déclenchement. Ainsi, si la formule est déjà présente dans la liste et le déclencheur déjà appliqué, alors la détection échoue.
+Le deuxième composant utilise le premier. Dans son code, nous utilisons une liste de couples associant déclencheurs et tactiques. Pour chaque couple, nous interprétons le déclencheur et s'il réussit, nous appliquons la tactique. Ici nous utilisons implicitement l'ordre que nous mentionnons à la section~\ref{realisation:detection_declenchement:declenchement}. Par exemple, pour l'élimination de la disjonction ($\lor E$), nous pouvons utiliser le déclencheur \mintinline{ocaml}|TIs (TSomeHyp, (TOr, TMetaVar, TMetaVar))|. Cependant, un problème auquel nous faisons face est que le déclencheur peut s'appliquer plusieurs fois. En effet, à moins de supprimer l'hypothèse, la condition restera vérifiée. Pour éviter cela, nous utilisons une liste de déclencheurs ainsi que la formule associée à leur déclenchement. Ainsi, si la formule est déjà présente dans la liste et le déclencheur déjà appliqué, alors la détection échoue.
 
-\subsubsection{Mise à l'œuvre avec le prototype}
+\subsubsection{Mise en œuvre avec le prototype}
 Nous avons implémenté le langage ainsi que son interpréteur dans le prototype. Par la suite, nous nous sommes servi de celui-ci pour définir des déclencheurs. En voici quelques'uns :
 \begin{itemize}
-    \item \mintinline{ocaml}|TEq (TGoal TSomeHyp)|. Celui-ci nous sert à délencher la tactique \textttbf{Axiom}.
-    \item \mintinline{ocaml}|TIs (TSomeHyp, (TOr, TMetaVar, TMetaVar))|. Nous l'utilisons pour déclencher la tactique $\lor_E$.
+    \item \mintinline{ocaml}|TEq (TGoal TSomeHyp)|. Celui-ci délenche la tactique $Axiom$.
+    \item \mintinline{ocaml}|TIs (TSomeHyp, (TOr, TMetaVar, TMetaVar))|. Nous l'utilisons pour la tactique $\lor_E$.
     \item \mintinline{ocaml}|TIs (TGoal, (TAnd, TDiscard, TDiscard))|. Ce dernier nous sert à déclencher la tactique $\land_I$.
 \end{itemize}
-Dans une autre fonction, nous lions ces déclencheurs à leurs tactiques correspondantes. Après chaque interaction avec l'utilisateur, nous interprétons les déclencheurs et appliquons les tactiques si la détection réussit.
+Dans une autre fonction, nous lions ces déclencheurs à leurs tactiques correspondantes. Après chaque interaction avec l'utilisateur, nous interprétons les déclencheurs et appliquons la tactique correspondant à la première détection réussie.
 
 \section{Conclusion et perspectives} \label{conclusion}
 \subsection{Notre contribution et nos résultats} \label{conclusion:contribution_resultats}
@@ -369,14 +368,14 @@ Nous abordons le défi de la conception de tactiques en proposant une approche q
 
 Nous étendons nos contributions en proposant une méthode de composition de tactiques basée sur les résultats obtenus à partir de la détection en amont. En combinant les résultats de plusieurs tactiques, nous facilitons la création d'ensembles de tactiques optimisées pour des scénarios spécifiques. Cette approche de détection en aval garantit que les tactiques sélectionnées sont cohérentes et adaptées à l'objectif final.
 
-Nos contributions sont mises à l'œuvre avec l'extension un prototype. L'ensemble des modifications apportées à celui-ci représente environ 500 nouvelles lignes de code OCaml.
+Nos contributions sont mises en œuvre avec l'extension du prototype. L'ensemble des modifications apportées à celui-ci représente environ 500 nouvelles lignes de code OCaml.
 
 \subsection{Perspectives} \label{conclusion:perspectives}
 Les contributions de ce stage constituent une fondation solide pour orienter nos futurs travaux de recherche. Dans ce contexte, Louise prévoit d'intégrer ces résultats dans le cadre de sa thèse en les développant davantage. En particulier, elle prévoit d'intégrer un langage pour détecter et déclencher des tactiques dans Sniper, un plugin pour l'assistant de preuve Coq faisant appel des solveurs SMT.
 
 Une tâche à venir consiste à se familiariser avec LTac2, un langage de programmation dédié à la construction de tactiques dans Coq, à comprendre son fonctionnement et à explorer ses capacités. Cette phase revêt une importance cruciale pour l'évolution de nos recherches, notamment pour l'implémentation future dans Coq.
 
-Il convient de noter que LTac2 est encore en phase de développement, présentant des similitudes frappantes avec notre propre langage. Bien que les mécanismes de détection semblent étroitement liés, des différences demeurent, notamment en ce qui concerne l'aspect de l'interprétation.
+Il convient de noter que LTac2 est encore en phase de développement, présentant des similitudes avec notre propre langage. Bien que les mécanismes de détection semblent étroitement liés, des différences demeurent, notamment en ce qui concerne l'aspect de l'interprétation.
 
 L'intégration de nos travaux dans l'écosystème de Coq demeure un objectif clé pour la prochaine étape de notre recherche. Cette entreprise impliquera un travail méticuleux de traduction de concepts et de réglages fins afin d'assurer la synergie entre nos résultats et l'environnement Coq.
 
